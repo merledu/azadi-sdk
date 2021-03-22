@@ -1,9 +1,18 @@
 #include <stdio.h>
+#include "gpio.h"
 
 int main(){
-    int a = 2, b = 3, c;
+    int a = 1;
+    int b = 5;
 
-    c = a + b;
+    int c = a + b;
+
+    // turn ON gpio pin 3
+    if (c>5)
+        write_gpio(3, 1);
+    else 
+    // turn OFF gpio pin 3
+        write_gpio(3, 0);
     
     return 0;
 }

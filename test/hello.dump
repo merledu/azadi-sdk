@@ -1,0 +1,110 @@
+/home/usman/Documents/azadi-sdk/test/output/hello.merl:     file format elf32-littleriscv
+
+
+Disassembly of section .init:
+
+00000000 <_start>:
+   0:	10000197          	auipc	gp,0x10000
+   4:	00018193          	mv	gp,gp
+   8:	10001117          	auipc	sp,0x10001
+   c:	ff810113          	addi	sp,sp,-8 # 10001000 <__stack_top>
+  10:	00010433          	add	s0,sp,zero
+  14:	0040006f          	j	18 <main>
+
+Disassembly of section .text:
+
+00000018 <main>:
+  18:	ff010113          	addi	sp,sp,-16
+  1c:	00112623          	sw	ra,12(sp)
+  20:	00812423          	sw	s0,8(sp)
+  24:	01010413          	addi	s0,sp,16
+  28:	00100593          	li	a1,1
+  2c:	00300513          	li	a0,3
+  30:	01c000ef          	jal	ra,4c <write_gpio>
+  34:	00000793          	li	a5,0
+  38:	00078513          	mv	a0,a5
+  3c:	00c12083          	lw	ra,12(sp)
+  40:	00812403          	lw	s0,8(sp)
+  44:	01010113          	addi	sp,sp,16
+  48:	00008067          	ret
+
+0000004c <write_gpio>:
+  4c:	fd010113          	addi	sp,sp,-48
+  50:	02812623          	sw	s0,44(sp)
+  54:	03010413          	addi	s0,sp,48
+  58:	fca42e23          	sw	a0,-36(s0)
+  5c:	fcb42c23          	sw	a1,-40(s0)
+  60:	400c07b7          	lui	a5,0x400c0
+  64:	01c78793          	addi	a5,a5,28 # 400c001c <__stack_top+0x300bf01c>
+  68:	fef42623          	sw	a5,-20(s0)
+  6c:	fdc42783          	lw	a5,-36(s0)
+  70:	fd842703          	lw	a4,-40(s0)
+  74:	00f717b3          	sll	a5,a4,a5
+  78:	00078713          	mv	a4,a5
+  7c:	fec42783          	lw	a5,-20(s0)
+  80:	00e7a023          	sw	a4,0(a5)
+  84:	400c07b7          	lui	a5,0x400c0
+  88:	01078793          	addi	a5,a5,16 # 400c0010 <__stack_top+0x300bf010>
+  8c:	fef42423          	sw	a5,-24(s0)
+  90:	fdc42783          	lw	a5,-36(s0)
+  94:	fd842703          	lw	a4,-40(s0)
+  98:	00f717b3          	sll	a5,a4,a5
+  9c:	00078713          	mv	a4,a5
+  a0:	fe842783          	lw	a5,-24(s0)
+  a4:	00e7a023          	sw	a4,0(a5)
+  a8:	00000013          	nop
+  ac:	02c12403          	lw	s0,44(sp)
+  b0:	03010113          	addi	sp,sp,48
+  b4:	00008067          	ret
+
+Disassembly of section .eh_frame:
+
+000000b8 <__global_pointer$-0xfffff48>:
+  b8:	0014                	0x14
+  ba:	0000                	unimp
+  bc:	0000                	unimp
+  be:	0000                	unimp
+  c0:	00527a03          	0x527a03
+  c4:	7c01                	lui	s8,0xfffe0
+  c6:	0101                	addi	sp,sp,0
+  c8:	07020d1b          	0x7020d1b
+  cc:	0001                	nop
+  ce:	0000                	unimp
+  d0:	0010                	0x10
+  d2:	0000                	unimp
+  d4:	001c                	0x1c
+  d6:	0000                	unimp
+  d8:	ff28                	fsw	fa0,120(a4)
+  da:	ffff                	0xffff
+  dc:	0018                	0x18
+  de:	0000                	unimp
+  e0:	0000                	unimp
+  e2:	0000                	unimp
+
+Disassembly of section .riscv.attributes:
+
+00000000 <.riscv.attributes>:
+   0:	1b41                	addi	s6,s6,-16
+   2:	0000                	unimp
+   4:	7200                	flw	fs0,32(a2)
+   6:	7369                	lui	t1,0xffffa
+   8:	01007663          	bgeu	zero,a6,14 <_start+0x14>
+   c:	0011                	c.nop	4
+   e:	0000                	unimp
+  10:	1004                	addi	s1,sp,32
+  12:	7205                	lui	tp,0xfffe1
+  14:	3376                	fld	ft6,376(sp)
+  16:	6932                	flw	fs2,12(sp)
+  18:	7032                	flw	ft0,44(sp)
+  1a:	0030                	addi	a2,sp,8
+
+Disassembly of section .comment:
+
+00000000 <.comment>:
+   0:	3a434347          	fmsub.d	ft6,ft6,ft4,ft7,rmm
+   4:	2820                	fld	fs0,80(s0)
+   6:	29554e47          	fmsub.s	ft8,fa0,fs5,ft5,rmm
+   a:	3120                	fld	fs0,96(a0)
+   c:	2e30                	fld	fa2,88(a2)
+   e:	2e32                	fld	ft8,264(sp)
+  10:	0030                	addi	a2,sp,8
