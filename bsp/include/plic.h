@@ -8,23 +8,23 @@
 
 /* Offsets for different registers in plic */
 
-#define PLIC_PRIORITY_OFFSET            0x0000UL
-#define PLIC_PENDING_OFFSET             0x1000UL
-#define PLIC_ENABLE_OFFSET              0x2000UL
-#define PLIC_THRESHOLD_OFFSET           0x10000UL
-#define PLIC_CLAIM_OFFSET               0x10010UL
+// #define PLIC_PENDING_OFFSET             0x0UL
+// #define PLIC_PRIORITY_OFFSET            0x0000UL
+// #define PLIC_ENABLE_OFFSET              0x2000UL
+// #define PLIC_THRESHOLD_OFFSET           0x10000UL
+// #define PLIC_CLAIM_OFFSET               0x10010UL
 
 
 #define PLIC_PRIORITY_SHIFT_PER_INT  2
 
 
-#define PLIC_PRIORITY_1 0X00
-#define PLIC_PRIORITY_2 0X01
-#define PLIC_PRIORITY_3 0X02
-#define PLIC_PRIORITY_4 0X04
-#define PLIC_PRIORITY_5 0X08
-#define PLIC_PRIORITY_6 0X10
-#define PLIC_PRIORITY_7 0X20
+#define PLIC_PRIORITY_1 0X30
+#define PLIC_PRIORITY_2 0X34
+#define PLIC_PRIORITY_3 0X38
+#define PLIC_PRIORITY_4 0X3c
+#define PLIC_PRIORITY_5 0X40
+#define PLIC_PRIORITY_6 0X44
+#define PLIC_PRIORITY_7 0X48
 
 #define PLIC_PENDING_SHIFT_PER_SOURCE   0
 
