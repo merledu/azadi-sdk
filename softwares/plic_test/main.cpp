@@ -30,14 +30,9 @@
  */
 
 #include "gpio.h"
-#include "uart.h"
-#include "utils.h"
 #include "traps.h"
 #include "platform.h"
-#include "plic_driver.h"
-#include "log.h"
-#include "defines.h"
-#include "memory.h"
+#include "plic.h"
 
 void handle_button_press(__attribute__((unused)) uint32_t num);
 
@@ -57,8 +52,7 @@ void handle_button_press(__attribute__((unused)) uint32_t num)
 	   Set GPIO1 to 1 to indicate output HIGH.
 	 */
 
-	write_word(GPIO_DIRECTION_CNTRL_REG, 0x0000002);
-	write_word(GPIO_DATA_REG, 0x00FFFFFF);
+	write_gpio(3, 1);
 }
 
 /** @fn main
@@ -87,48 +81,5 @@ int main(void){
 	asm volatile("li      t0, 0x800\t\n"
 		     "csrrs   zero, mie, t0\t\n"
 		    );
-
-	asm volatile(
-		     "csrr %[retval], mstatus\n"
-		     :
-		     [retval]
-		     "=r"
-		     (retval)
-		    );
-
-	log_debug("mstatus = %x\n", retval);
-
-	asm volatile(
-		     "csrr %[retval], mie\n"
-		     :
-		     [retval]
-		     "=r"
-		     (retval)
-		    );
-
-	log_debug("mie = %x\n", retval);
-
-	asm volatile(
-		     "csrr %[retval], mip\n"
-		     :
-		     [retval]
-		     "=r"
-		     (retval)
-		    );
-
-	while(1){
-		i++;
-
-		if((i%10000000) == 0){
-
-			asm volatile(
-				     "csrr %[retval], mip\n"
-				     :
-				     [retval]
-				     "=r"
-				     (retval)
-				    );
-		}
-	}
 	return 0;
 }
