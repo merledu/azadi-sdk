@@ -36,7 +36,7 @@ build-drivers : compile-drivers
 build : clean build-drivers
 	@echo "building $(FILEPATH)/$(PROGRAM).c"
 	@mkdir $(FILEPATH)/output
-	$(GCC) $(GCCFLAGS) -I$(INCLUDE) -I$(DRIVERS)/gpio -c $(FILEPATH)/$(PROGRAM).c -o $(FILEPATH)/output/$(PROGRAM).o -lgcc
+	$(GCC) $(GCCFLAGS) -I$(INCLUDE) -I$(DRIVERS)/gpio -I$(DRIVERS)/plic -c $(FILEPATH)/$(PROGRAM).c -o $(FILEPATH)/output/$(PROGRAM).o -lgcc
 	$(GCC) $(LINK_FLAGS) $(CORE)/start.S $(CORE)/trap.S generated/gpio.o generated/plic.o generated/trap.o $(FILEPATH)/output/$(PROGRAM).o -o $(FILEPATH)/output/$(PROGRAM).merl -lgcc
 	$(OBJDMP) $(OBJFLAGS) $(FILEPATH)/output/$(PROGRAM).merl > $(FILEPATH)/output/$(PROGRAM).dump 
 	$(RISCV)elf2hex --bit-width 32 --input $(FILEPATH)/output/$(PROGRAM).merl --output program.hex

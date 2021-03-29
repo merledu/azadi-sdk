@@ -78,7 +78,7 @@
 #define PLIC_INTERRUPT_25  25 //uart 0
 #define PLIC_INTERRUPT_26  26 //uart 1
 #define PLIC_INTERRUPT_27  27 //uart 2
-#define PLIC_MAX_INTERRUPT_SRC 28
+#define PLIC_MAX_INTERRUPT_SRC 31
 
 
 /*!General Purpose Input Output */

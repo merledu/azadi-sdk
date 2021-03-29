@@ -61,7 +61,7 @@ void interrupt_enable(uint32_t interrupt_id);
 void mach_plic_handler(uintptr_t int_id, uintptr_t epc);
 void interrupt_disable(uint32_t interrupt_id);
 void set_interrupt_threshold(uint32_t priority_value);
-void set_interrupt_priority(uint32_t priority_value, uint32_t int_id);
+void set_interrupt_priority(uint32_t priority_value, uint32_t int_id, int priority);
 void configure_interrupt_pin(uint32_t pin);
 void plic_init(void);
 void configure_interrupt(uint32_t int_id);

@@ -33,22 +33,22 @@ void interrupt_complete(uint32_t interrupt_id)
 	hart0_interrupt_matrix[interrupt_id].count++;
 }
 
-void configure_interrupt_pin( __attribute__((unused)) uint32_t id)
-{
+// void configure_interrupt_pin( __attribute__((unused)) uint32_t id)
+// {
 
-	uint32_t read_data;
+// 	uint32_t read_data;
 
-	/*
-	   GPIO0 -> Int id 7
-	   GPIO15 -> Int id 21
-	   Refer platform.h for full memory map.
-	 */
+// 	/*
+// 	   GPIO0 -> Int id 7
+// 	   GPIO15 -> Int id 21
+// 	   Refer platform.h for full memory map.
+// 	 */
 
-	read_data = read_word(GPIO_DIRECTION_CNTRL_REG);
+// 	read_data = read_word(GPIO_DIRECTION_CNTRL_REG);
 
-	write_word(GPIO_DIRECTION_CNTRL_REG, (read_data) & \
-		   (0xFFFFFFFF & ~(1 << (id-7))));
-}
+// 	write_word(GPIO_DIRECTION_CNTRL_REG, (read_data) & \
+// 		   (0xFFFFFFFF & ~(1 << (id-7))));
+// }
 
 uint32_t interrupt_claim_request()
 {
@@ -66,8 +66,7 @@ void mach_plic_handler( __attribute__((unused)) uintptr_t int_id, __attribute__(
 
 	interrupt_id = interrupt_claim_request();
 
-		hart0_interrupt_matrix[interrupt_id].state = ACTIVE;
-
+	hart0_interrupt_matrix[interrupt_id].state = ACTIVE;
 
 	isr_table[interrupt_id](interrupt_id);
 
@@ -80,34 +79,20 @@ void interrupt_enable(uint32_t interrupt_id)
 	uint8_t current_value = 0x00, new_value;
 
 	interrupt_enable_addr = (uint8_t *) (PLIC_BASE_ADDRESS +
-			RV_PLIC_IE0_REG_OFFSET +
-			((interrupt_id) >> 3));
+			RV_PLIC_IE0_REG_OFFSET);
 
-	current_value = *interrupt_enable_addr;
-
-	/*set the bit corresponding to the interrupt src*/
-	new_value = current_value | (0x1 << (interrupt_id % 8));
-
-	*((uint8_t*)interrupt_enable_addr) = new_value;
+	*interrupt_enable_addr = 0x1 << interrupt_id;
 }
 
 void interrupt_disable(uint32_t interrupt_id)
 {
 	uint8_t *interrupt_disable_addr = 0;
-	uint8_t current_value = 0x00, new_value;
 
 
 	interrupt_disable_addr = (uint8_t *) (PLIC_BASE_ADDRESS +
-					      RV_PLIC_IE0_REG_OFFSET +
-					      (interrupt_id >> 3));
+					      RV_PLIC_IE0_REG_OFFSET);
 
-	current_value = *interrupt_disable_addr;
-
-
-	/*unset the bit corresponding to the interrupt src*/
-	new_value = current_value & (~(0x1 << (interrupt_id % 8)));
-
-	*interrupt_disable_addr = new_value;
+	*interrupt_disable_addr = 0x0 << interrupt_id;
 
 	hart0_interrupt_matrix[interrupt_id].state = INACTIVE;
 }
@@ -124,7 +109,7 @@ void set_interrupt_threshold(uint32_t priority_value)
 
 }
 
-void set_interrupt_priority(uint32_t priority_value, uint32_t int_id)
+void set_interrupt_priority(uint32_t priority_reg, uint32_t int_id, int priority)
 {
 
 	uint32_t * interrupt_priority_address;
@@ -134,11 +119,9 @@ void set_interrupt_priority(uint32_t priority_value, uint32_t int_id)
 	 */
 
 	interrupt_priority_address = (uint32_t *) (PLIC_BASE_ADDRESS +
-						   RV_PLIC_PRIO0_REG_OFFSET +
-						   (int_id <<
-						    PLIC_PRIORITY_SHIFT_PER_INT));
+						   priority_reg);
 
-	*interrupt_priority_address = priority_value;
+	*interrupt_priority_address = priority;
 
 }
 
@@ -180,7 +163,7 @@ void plic_init()
 	{
 		hart0_interrupt_matrix[int_id].state = INACTIVE;
 		hart0_interrupt_matrix[int_id].id = int_id;
-		hart0_interrupt_matrix[int_id].priority = RV_PLIC_PRIO3_REG_OFFSET;
+		hart0_interrupt_matrix[int_id].priority = 3;
 		hart0_interrupt_matrix[int_id].count = 0;
 
 		interrupt_disable(int_id);
@@ -190,10 +173,10 @@ void plic_init()
 
 		/*set priority for all interrupts*/
 
-		set_interrupt_priority(RV_PLIC_PRIO3_REG_OFFSET, int_id);
+		set_interrupt_priority(RV_PLIC_PRIO3_REG_OFFSET, int_id, 3);
 	}
 
-	set_interrupt_threshold(RV_PLIC_PRIO2_REG_OFFSET);
+	set_interrupt_threshold(2);
 
 }
 
@@ -204,10 +187,10 @@ void configure_interrupt(uint32_t int_id)
 	/*
 	   Call only for GPIO pins
 	 */
-	if(int_id >6 && int_id < 22)
-	{
-		configure_interrupt_pin(int_id);
-	}
+	// if(int_id >6 && int_id < 22)
+	// {
+	// 	configure_interrupt_pin(int_id);
+	// }
 
 	interrupt_enable(int_id);
 
