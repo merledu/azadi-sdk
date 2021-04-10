@@ -97,8 +97,8 @@ inline uint8_t mmio_region_read8(mmio_region_t base, ptrdiff_t offset) {
  * @return the read value.
  */
 MMIO_WARN_UNUSED_RESULT
-inline uint32_t mmio_region_read32(mmio_region_t base, ptrdiff_t offset) {
-  return ((volatile uint32_t *)base.base)[offset / sizeof(uint32_t)];
+inline uint32_t mmio_region_read32(uint32_t base, ptrdiff_t offset) {
+  return ((volatile uint32_t *)base)[offset / sizeof(uint32_t)];
 }
 
 /**
@@ -128,9 +128,9 @@ inline void mmio_region_write8(mmio_region_t base, ptrdiff_t offset,
  * @param offset the offset to write at, in bytes.
  * @param value the value to write.
  */
-inline void mmio_region_write32(mmio_region_t base, ptrdiff_t offset,
+inline void mmio_region_write32(uint32_t base, ptrdiff_t offset,
                                 uint32_t value) {
-  ((volatile uint32_t *)base.base)[offset / sizeof(uint32_t)] = value;
+  ((volatile uint32_t *)base)[offset / sizeof(uint32_t)] = value;
 }
 #else   // MOCK_MMIO
 /**

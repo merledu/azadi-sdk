@@ -3,6 +3,7 @@
 #define PLIC_DRIVER_H
 #include "trap.h"
 #include "platform.h"
+#include <stdbool.h>
 
 /* Macros */
 
@@ -65,5 +66,9 @@ void set_interrupt_priority(uint32_t priority_value, uint32_t int_id, int priori
 void configure_interrupt_pin(uint32_t pin);
 void plic_init(void);
 void configure_interrupt(uint32_t int_id);
+void plic_set_trigger_type(bool type);
+void plic_set_threshold(uint32_t threshold);
+void plic_set_priority(int irq, uint32_t priority);
+void plic_enable_interrupt(uint32_t irq, uint32_t val);
 
 #endif

@@ -35,59 +35,53 @@
 #include "plic.h"
 #include "plic-regs.h"
 
-void handle_button_press(__attribute__((unused)) uint32_t num);
-
-/** @fn handle_button_press
- * @brief a default handler to handle button press event
- * @param unsigned num
- * @return unsigned
- */
-void handle_button_press(__attribute__((unused)) uint32_t num)
-{
-	/*
-	   Assuming led is connected to GPIO1.
-	   pin IO1 in pinaka
-	   Set GPIO1 in GPIO_DIRECTION_CNTRL_REG to 1, for write.
-	   Set GPIO1 to 1 to indicate output HIGH.
-	 */
-
-	write_gpio(3, 1);
-}
-
 /** @fn main
  * @brief sets up the environment for plic feature
  * @return int
  */
+
+#define pin 8
+
 int main(void){
 	register unsigned int retval;
 	int i;
-	
+
 	uint32_t *gpio_intr; 
 	gpio_intr = (uint32_t *)(GPIO_START + GPIO_INTR_ENABLE_REG_OFFSET);
-	*gpio_intr = (1 << 3);
-
+	*gpio_intr = 8;
+	
 	uint32_t *lvlhigh;
 	lvlhigh = (uint32_t *)(GPIO_START + GPIO_INTR_CTRL_EN_LVLHIGH_REG_OFFSET);
-	*lvlhigh = (1 << 3);
+	*lvlhigh = 8;
 
-	//init plic module
-	plic_init();
+	plic_set_threshold(2);
+	plic_set_priority(3, 3);
+	plic_enable_interrupt(3, 1);
+	int i = 0;
+	while(i < 1000 ) {
+		i= i + 1;
+	}
+	
+	plic_enable_interrupt(3, 0);
 
-	//configure interrupt id 7
-	configure_interrupt(PLIC_INTERRUPT_3);
+	// //init plic module
+	// plic_init();
+
+	// //configure interrupt id 7
+	// configure_interrupt(3);
 
 
 	//set the corresponding isr for interrupt id 7
-	isr_table[PLIC_INTERRUPT_3] = handle_button_press;
+	// isr_table[PLIC_INTERRUPT_3] = handle_button_press;
 
-	// Enable Global (PLIC) interrupts.
-	asm volatile("li      t0, 8\t\n"
-		     "csrrs   zero, mstatus, t0\t\n"
-		    );
+	// // Enable Global (PLIC) interrupts.
+	// asm volatile("li      t0, 8\t\n"
+	// 	     "csrrs   zero, mstatus, t0\t\n"
+	// 	    );
 
-	// Enable Local (PLIC) interrupts.
-	asm volatile("li      t0, 0x800\t\n"
-		     "csrrs   zero, mie, t0\t\n"
-		    );
+	// // Enable Local (PLIC) interrupts.
+	// asm volatile("li      t0, 0x800\t\n"
+	// 	     "csrrs   zero, mie, t0\t\n"
+	// 	    );
 	return 0;
 }

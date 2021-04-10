@@ -2,6 +2,9 @@
 #include <stddef.h>
 #include "platform.h"
 #include "plic-regs.h"
+#include <stdbool.h>
+#include <stdint.h>
+
 
 
 plic_fptr_t isr_table[PLIC_MAX_INTERRUPT_SRC];
@@ -17,9 +20,15 @@ unsigned long read_word(uint32_t *addr)
  * @param int*
  * @param unsigned long
  */
-void write_word(uint32_t *addr, unsigned long val)
-{
-	*addr = val;
+inline void mem_write32(uint32_t base, uint32_t offset,
+                                uint32_t value) {
+  ((volatile uint32_t *)base)[offset / sizeof(uint32_t)] = value;
+}
+
+// Helper function to calculate priority register
+static ptrdiff_t plic_priority_reg_offset(uint32_t irq) {
+  ptrdiff_t offset = irq * sizeof(uint32_t);
+  return RV_PLIC_PRIO0_REG_OFFSET + offset;
 }
 
 void interrupt_complete(uint32_t interrupt_id)
@@ -97,33 +106,64 @@ void interrupt_disable(uint32_t interrupt_id)
 	hart0_interrupt_matrix[interrupt_id].state = INACTIVE;
 }
 
-void set_interrupt_threshold(uint32_t priority_value)
-{
+// void set_interrupt_threshold(uint32_t priority_value)
+// {
 
-	uint32_t *interrupt_threshold_priority = NULL;
+// 	uint32_t *interrupt_threshold_priority = NULL;
 
-	interrupt_threshold_priority = (uint32_t *) (PLIC_BASE_ADDRESS +
-						     RV_PLIC_THRESHOLD0_REG_OFFSET);
+// 	interrupt_threshold_priority = (uint32_t *) (PLIC_BASE_ADDRESS +
+// 						     RV_PLIC_THRESHOLD0_REG_OFFSET);
 
-	*interrupt_threshold_priority = priority_value;
+// 	*interrupt_threshold_priority = priority_value;
+
+// }
+
+// void set_interrupt_priority(uint32_t priority_reg, uint32_t int_id, int priority)
+// {
+
+// 	uint32_t * interrupt_priority_address;
+
+// 	/*
+// 	   base address + priority offset + 4*interruptId
+// 	 */
+
+// 	interrupt_priority_address = (uint32_t *) (PLIC_BASE_ADDRESS +
+// 						   priority_reg);
+
+// 	*interrupt_priority_address = 3;
+
+// }
+
+void plic_set_priority(int irq, uint32_t priority) {
+
+  ptrdiff_t offset = plic_priority_reg_offset(irq);
+  mem_write32(PLIC_BASE_ADDRESS, offset, priority);
+}
+
+void plic_set_threshold(uint32_t threshold) {
+  mem_write32(PLIC_BASE_ADDRESS, RV_PLIC_THRESHOLD0_REG_OFFSET, threshold);
 
 }
 
-void set_interrupt_priority(uint32_t priority_reg, uint32_t int_id, int priority)
-{
-
-	uint32_t * interrupt_priority_address;
-
-	/*
-	   base address + priority offset + 4*interruptId
-	 */
-
-	interrupt_priority_address = (uint32_t *) (PLIC_BASE_ADDRESS +
-						   priority_reg);
-
-	*interrupt_priority_address = priority;
+void plic_enable_interrupt(uint32_t irq, uint32_t val) {
+  mem_write32(PLIC_BASE_ADDRESS, RV_PLIC_IE0_REG_OFFSET, val);
 
 }
+
+void plic_set_trigger_type(bool type) {
+  mem_write32(PLIC_BASE_ADDRESS, RV_PLIC_LE_REG_OFFSET, type);
+}
+
+
+void dif_plic_irq_set_enabled(uint32_t irq, bool state) {
+
+  uint32_t reg = mmio_region_read32(PLIC_BASE_ADDRESS, RV_PLIC_IE0_REG_OFFSET);
+  uint8_t bit_index = irq % RV_PLIC_PARAM_REG_WIDTH;
+  reg = bitfield_bit32_write(reg, bit_index, state);
+  mmio_region_write32(PLIC_BASE_ADDRESS, RV_PLIC_IE0_REG_OFFSET, reg);
+
+}
+
 
 void isr_default(uint32_t interrupt_id)
 {
@@ -147,38 +187,48 @@ void isr_default(uint32_t interrupt_id)
 }
 
 
-void plic_init()
-{
-	uint32_t int_id = 0;
+// void plic_init()
+// {
+// 	uint32_t int_id = 0;
+// 	mcause_interrupt_table[MACH_EXTERNAL_INTERRUPT] = mach_plic_handler;
 
+// 	hart0_interrupt_matrix[0].state = INACTIVE;
+// 	hart0_interrupt_matrix[0].id = 0;
+// 	hart0_interrupt_matrix[0].priority = 0;
+// 	hart0_interrupt_matrix[0].count = 0;
 
-	mcause_interrupt_table[MACH_EXTERNAL_INTERRUPT] = mach_plic_handler;
+// 	for(int_id = 1; int_id < PLIC_MAX_INTERRUPT_SRC; int_id++)
+// 	{
+// 		hart0_interrupt_matrix[int_id].state = INACTIVE;
+// 		hart0_interrupt_matrix[int_id].id = int_id;
+// 		hart0_interrupt_matrix[int_id].priority = 3;
+// 		hart0_interrupt_matrix[int_id].count = 0;
 
-	hart0_interrupt_matrix[0].state = INACTIVE;
-	hart0_interrupt_matrix[0].id = 0;
-	hart0_interrupt_matrix[0].priority = 0;
-	hart0_interrupt_matrix[0].count = 0;
+// 		interrupt_disable(int_id);
 
-	for(int_id = 1; int_id < PLIC_MAX_INTERRUPT_SRC; int_id++)
-	{
-		hart0_interrupt_matrix[int_id].state = INACTIVE;
-		hart0_interrupt_matrix[int_id].id = int_id;
-		hart0_interrupt_matrix[int_id].priority = 3;
-		hart0_interrupt_matrix[int_id].count = 0;
+// 		/*assign a default isr for all interrupts*/
+// 		isr_table[int_id] = isr_default;
 
-		interrupt_disable(int_id);
+// 		/*set priority for all interrupts*/
+// 		set_interrupt_priority(RV_PLIC_PRIO3_REG_OFFSET, int_id, 3);
+// 	}
+// 	set_interrupt_threshold(2);
+// }
 
-		/*assign a default isr for all interrupts*/
-		isr_table[int_id] = isr_default;
+// void plic_init_alt(uint32_t intr_id, int threshold, int priority){
+	
+// 	uint32_t *plic_intr_en;
+// 	plic_intr_en = (uint32_t *)(PLIC_BASE_ADDRESS + RV_PLIC_IE0_REG_OFFSET);
+// 	*plic_intr_en = (1 << intr_id);
+	
+// 	uint32_t *plic_intr_threshold;
+// 	plic_intr_threshold = (uint32_t *)(PLIC_BASE_ADDRESS + RV_PLIC_THRESHOLD0_REG_OFFSET);
+// 	*plic_intr_threshold = threshold;
 
-		/*set priority for all interrupts*/
-
-		set_interrupt_priority(RV_PLIC_PRIO3_REG_OFFSET, int_id, 3);
-	}
-
-	set_interrupt_threshold(2);
-
-}
+// 	uint32_t *plic_intr_priority;
+// 	plic_intr_priority = (uint32_t *)(PLIC_BASE_ADDRESS + RV_PLIC_PRIO3_REG_OFFSET);
+// 	*plic_intr_priority = priority;
+// }
 
 
 void configure_interrupt(uint32_t int_id)

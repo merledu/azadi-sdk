@@ -18,7 +18,7 @@ uintptr_t handle_trap(uintptr_t mcause, uintptr_t epc)
 	unsigned int ie_entry = 0;
 	uint32_t shift_length = 0;
 
-	shift_length = __riscv_xlen - 1;
+	shift_length = 32 - 1;
 
 	 /* checking for type of trap */
 	if (mcause & (1 << (shift_length))){

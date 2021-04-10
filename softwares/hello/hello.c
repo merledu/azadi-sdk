@@ -3,6 +3,7 @@
 
 int main(){
 
-    write_gpio(3, 1);
+    gpio_masked_write(5, 1);
+    // gpio_masked_write(5, 0);
     return 0;
 }
