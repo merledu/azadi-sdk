@@ -20,9 +20,38 @@ unsigned long read_word(uint32_t *addr)
  * @param int*
  * @param unsigned long
  */
+
+
+
 inline void mem_write32(uint32_t base, uint32_t offset,
                                 uint32_t value) {
   ((volatile uint32_t *)base)[offset / sizeof(uint32_t)] = value;
+}
+
+inline uint32_t mem_read32(uint32_t base, ptrdiff_t offset) {
+  return ((volatile uint32_t *)base)[offset / sizeof(uint32_t)];
+}
+
+inline bitfield_field32_t bitfield_bit32_to_field32(
+    uint32_t bit_index) {
+  return (bitfield_field32_t){
+      .mask = 0x1, .index = bit_index,
+  };
+}
+
+inline uint32_t bitfield_field32_write(uint32_t bitfield,
+                                       bitfield_field32_t field,
+                                       uint32_t value) {
+  bitfield &= ~(field.mask << field.index);
+  bitfield |= (value & field.mask) << field.index;
+  return bitfield;
+}
+
+inline uint32_t bitfield_bit32_write(uint32_t bitfield,
+                                     uint32_t bit_index,
+                                     bool value) {
+  return bitfield_field32_write(bitfield, bitfield_bit32_to_field32(bit_index),
+                                value ? 0x1u : 0x0u);
 }
 
 // Helper function to calculate priority register
@@ -157,10 +186,10 @@ void plic_set_trigger_type(bool type) {
 
 void dif_plic_irq_set_enabled(uint32_t irq, bool state) {
 
-  uint32_t reg = mmio_region_read32(PLIC_BASE_ADDRESS, RV_PLIC_IE0_REG_OFFSET);
+  uint32_t reg = mem_read32(PLIC_BASE_ADDRESS, RV_PLIC_IE0_REG_OFFSET);
   uint8_t bit_index = irq % RV_PLIC_PARAM_REG_WIDTH;
   reg = bitfield_bit32_write(reg, bit_index, state);
-  mmio_region_write32(PLIC_BASE_ADDRESS, RV_PLIC_IE0_REG_OFFSET, reg);
+  mem_write32(PLIC_BASE_ADDRESS, RV_PLIC_IE0_REG_OFFSET, reg);
 
 }
 

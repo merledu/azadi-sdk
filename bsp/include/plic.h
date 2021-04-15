@@ -4,6 +4,7 @@
 #include "trap.h"
 #include "platform.h"
 #include <stdbool.h>
+#include <stddef.h>
 
 /* Macros */
 
@@ -70,5 +71,25 @@ void plic_set_trigger_type(bool type);
 void plic_set_threshold(uint32_t threshold);
 void plic_set_priority(int irq, uint32_t priority);
 void plic_enable_interrupt(uint32_t irq, uint32_t val);
+
+typedef struct bitfield_field32 {
+  /** The field mask. Usually all ones. */
+  uint32_t mask;
+  /** The field position in the bitfield, counting from the zero-bit. */
+  uint32_t index;
+} bitfield_field32_t;
+
+
+extern uint32_t bitfield_bit32_write(uint32_t bitfield,
+                                     uint32_t bit_index,
+                                     bool value);
+
+extern uint32_t bitfield_field32_write(uint32_t bitfield,
+                                       bitfield_field32_t field,
+                                       uint32_t value);
+extern bitfield_field32_t bitfield_bit32_to_field32(
+    uint32_t bit_index);
+
+extern uint32_t mem_read32(uint32_t base, ptrdiff_t offset);
 
 #endif

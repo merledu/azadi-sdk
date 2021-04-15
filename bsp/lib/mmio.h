@@ -171,7 +171,7 @@ void mmio_region_write32(mmio_region_t base, ptrdiff_t offset, uint32_t value);
  */
 MMIO_WARN_UNUSED_RESULT
 MMIO_DEPRECATED
-inline uint32_t mmio_region_read_mask32(mmio_region_t base, ptrdiff_t offset,
+inline uint32_t mmio_region_read_mask32(uint32_t base, ptrdiff_t offset,
                                         uint32_t mask, uint32_t mask_index) {
   return bitfield_field32_read(
       mmio_region_read32(base, offset),
@@ -192,7 +192,7 @@ inline uint32_t mmio_region_read_mask32(mmio_region_t base, ptrdiff_t offset,
  */
 MMIO_WARN_UNUSED_RESULT
 MMIO_DEPRECATED
-inline bool mmio_region_get_bit32(mmio_region_t base, ptrdiff_t offset,
+inline bool mmio_region_get_bit32(uint32_t base, ptrdiff_t offset,
                                   uint32_t bit_index) {
   return bitfield_bit32_read(mmio_region_read32(base, offset), bit_index);
 }
@@ -209,7 +209,7 @@ inline bool mmio_region_get_bit32(mmio_region_t base, ptrdiff_t offset,
  * @param mask_index mask position within the selected register.
  */
 MMIO_DEPRECATED
-inline void mmio_region_nonatomic_clear_mask32(mmio_region_t base,
+inline void mmio_region_nonatomic_clear_mask32(uint32_t base,
                                                ptrdiff_t offset, uint32_t mask,
                                                uint32_t mask_index) {
   uint32_t register_value = mmio_region_read32(base, offset);
@@ -231,7 +231,7 @@ inline void mmio_region_nonatomic_clear_mask32(mmio_region_t base,
  * @param mask_index mask position within the selected register.
  */
 MMIO_DEPRECATED
-inline void mmio_region_nonatomic_set_mask32(mmio_region_t base,
+inline void mmio_region_nonatomic_set_mask32(uint32_t base,
                                              ptrdiff_t offset, uint32_t mask,
                                              uint32_t mask_index) {
   uint32_t register_value = mmio_region_read32(base, offset);
@@ -253,7 +253,7 @@ inline void mmio_region_nonatomic_set_mask32(mmio_region_t base,
  * @param mask_index mask position within the selected register.
  */
 MMIO_DEPRECATED
-inline void mmio_region_write_only_set_mask32(mmio_region_t base,
+inline void mmio_region_write_only_set_mask32(uint32_t base,
                                               ptrdiff_t offset, uint32_t mask,
                                               uint32_t mask_index) {
   uint32_t register_value = 0x0u;
@@ -278,7 +278,7 @@ inline void mmio_region_write_only_set_mask32(mmio_region_t base,
  * @param value value to set the field to.
  */
 MMIO_DEPRECATED
-inline void mmio_region_nonatomic_set_field32(mmio_region_t base,
+inline void mmio_region_nonatomic_set_field32(uint32_t base,
                                               ptrdiff_t offset,
                                               bitfield_field32_t field,
                                               uint32_t value) {
@@ -299,7 +299,7 @@ inline void mmio_region_nonatomic_set_field32(mmio_region_t base,
  * @param value value to set field to.
  */
 MMIO_DEPRECATED
-inline void mmio_region_write_only_set_field32(mmio_region_t base,
+inline void mmio_region_write_only_set_field32(uint32_t base,
                                                ptrdiff_t offset,
                                                bitfield_field32_t field,
                                                uint32_t value) {
@@ -319,7 +319,7 @@ inline void mmio_region_write_only_set_field32(mmio_region_t base,
  * @param bit_index the bit to clear.
  */
 MMIO_DEPRECATED
-inline void mmio_region_nonatomic_clear_bit32(mmio_region_t base,
+inline void mmio_region_nonatomic_clear_bit32(uint32_t base,
                                               ptrdiff_t offset,
                                               uint32_t bit_index) {
   uint32_t register_value = mmio_region_read32(base, offset);
@@ -337,7 +337,7 @@ inline void mmio_region_nonatomic_clear_bit32(mmio_region_t base,
  * @param bit_index the bit to set.
  */
 MMIO_DEPRECATED
-inline void mmio_region_nonatomic_set_bit32(mmio_region_t base,
+inline void mmio_region_nonatomic_set_bit32(uint32_t base,
                                             ptrdiff_t offset,
                                             uint32_t bit_index) {
   uint32_t register_value = mmio_region_read32(base, offset);
@@ -358,7 +358,7 @@ inline void mmio_region_nonatomic_set_bit32(mmio_region_t base,
  * @param bit_index the bit to set.
  */
 MMIO_DEPRECATED
-inline void mmio_region_write_only_set_bit32(mmio_region_t base,
+inline void mmio_region_write_only_set_bit32(uint32_t base,
                                              ptrdiff_t offset,
                                              uint32_t bit_index) {
   uint32_t register_value = 0x0u;
@@ -378,7 +378,7 @@ inline void mmio_region_write_only_set_bit32(mmio_region_t base,
  * @param dest the main memory location to start writing to.
  * @param len number of bytes to copy.
  */
-void mmio_region_memcpy_from_mmio32(mmio_region_t base, uint32_t offset,
+void mmio_region_memcpy_from_mmio32(uint32_t base, uint32_t offset,
                                     void *dest, size_t len);
 
 /**
@@ -393,7 +393,7 @@ void mmio_region_memcpy_from_mmio32(mmio_region_t base, uint32_t offset,
  * @param src the main memory location to start reading from.
  * @param len number of bytes to copy.
  */
-void mmio_region_memcpy_to_mmio32(mmio_region_t base, uint32_t offset,
+void mmio_region_memcpy_to_mmio32(uint32_t base, uint32_t offset,
                                   const void *src, size_t len);
 
 #ifdef __cplusplus

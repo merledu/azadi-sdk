@@ -31,7 +31,7 @@ static ptrdiff_t misalignment32_of(uintptr_t addr) {
  * @param from_mmio if true, copy from MMIO to main memory. Otherwise, copy from
  * main memory to MMIO.
  */
-static void mmio_region_memcpy32(mmio_region_t base, uint32_t offset, void *buf,
+static void mmio_region_memcpy32(uint32_t base, uint32_t offset, void *buf,
                                  size_t len, bool from_mmio) {
   if (len == 0) {
     return;
@@ -107,12 +107,12 @@ static void mmio_region_memcpy32(mmio_region_t base, uint32_t offset, void *buf,
   }
 }
 
-void mmio_region_memcpy_from_mmio32(mmio_region_t base, uint32_t offset,
+void mmio_region_memcpy_from_mmio32(uint32_t base, uint32_t offset,
                                     void *dest, size_t len) {
   mmio_region_memcpy32(base, offset, dest, len, true);
 }
 
-void mmio_region_memcpy_to_mmio32(mmio_region_t base, uint32_t offset,
+void mmio_region_memcpy_to_mmio32(uint32_t base, uint32_t offset,
                                   const void *src, size_t len) {
   // Below `const` cast is necessary to be able to use `mmio_region_memcpy32`
   // for both read and write operations but `from_mmio = false` means that `src`
@@ -123,38 +123,38 @@ void mmio_region_memcpy_to_mmio32(mmio_region_t base, uint32_t offset,
 // `extern` declarations to give the inline functions in the
 // corresponding header a link location.
 extern uint8_t mmio_region_read8(mmio_region_t base, ptrdiff_t offset);
-extern uint32_t mmio_region_read32(mmio_region_t base, ptrdiff_t offset);
+extern uint32_t mmio_region_read32(uint32_t base, ptrdiff_t offset);
 extern void mmio_region_write8(mmio_region_t base, ptrdiff_t offset,
                                uint8_t value);
-extern void mmio_region_write32(mmio_region_t base, ptrdiff_t offset,
+extern void mmio_region_write32(uint32_t base, ptrdiff_t offset,
                                 uint32_t value);
-extern uint32_t mmio_region_read_mask32(mmio_region_t base, ptrdiff_t offset,
+extern uint32_t mmio_region_read_mask32(uint32_t base, ptrdiff_t offset,
                                         uint32_t mask, uint32_t mask_index);
-extern bool mmio_region_get_bit32(mmio_region_t base, ptrdiff_t offset,
+extern bool mmio_region_get_bit32(uint32_t base, ptrdiff_t offset,
                                   uint32_t bit_index);
-extern void mmio_region_nonatomic_clear_mask32(mmio_region_t base,
+extern void mmio_region_nonatomic_clear_mask32(uint32_t base,
                                                ptrdiff_t offset, uint32_t mask,
                                                uint32_t mask_index);
-extern void mmio_region_nonatomic_set_mask32(mmio_region_t base,
+extern void mmio_region_nonatomic_set_mask32(uint32_t base,
                                              ptrdiff_t offset, uint32_t mask,
                                              uint32_t mask_index);
-extern void mmio_region_write_only_set_mask32(mmio_region_t base,
+extern void mmio_region_write_only_set_mask32(uint32_t base,
                                               ptrdiff_t offset, uint32_t mask,
                                               uint32_t mask_index);
-extern void mmio_region_nonatomic_set_field32(mmio_region_t base,
+extern void mmio_region_nonatomic_set_field32(uint32_t base,
                                               ptrdiff_t offset,
                                               bitfield_field32_t field,
                                               uint32_t value);
-extern void mmio_region_write_only_set_field32(mmio_region_t base,
+extern void mmio_region_write_only_set_field32(uint32_t base,
                                                ptrdiff_t offset,
                                                bitfield_field32_t field,
                                                uint32_t value);
-extern void mmio_region_nonatomic_clear_bit32(mmio_region_t base,
+extern void mmio_region_nonatomic_clear_bit32(uint32_t base,
                                               ptrdiff_t offset,
                                               uint32_t bit_index);
-extern void mmio_region_nonatomic_set_bit32(mmio_region_t base,
+extern void mmio_region_nonatomic_set_bit32(uint32_t base,
                                             ptrdiff_t offset,
                                             uint32_t bit_index);
-extern void mmio_region_write_only_set_bit32(mmio_region_t base,
+extern void mmio_region_write_only_set_bit32(uint32_t base,
                                              ptrdiff_t offset,
                                              uint32_t bit_index);

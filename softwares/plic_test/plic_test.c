@@ -57,7 +57,8 @@ int main(void){
 	plic_set_threshold(2);
 	plic_set_priority(3, 3);
 	plic_enable_interrupt(3, 1);
-	int i = 0;
+	
+	i = 0;
 	while(i < 1000 ) {
 		i= i + 1;
 	}
