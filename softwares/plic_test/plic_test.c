@@ -56,14 +56,14 @@ int main(void){
 
 	plic_set_threshold(2);
 	plic_set_priority(3, 3);
-	plic_enable_interrupt(3, 1);
+	plic_irq_set_enabled(3, 1);
 	
-	i = 0;
-	while(i < 1000 ) {
-		i= i + 1;
-	}
+	// i = 0;
+	// while(i < 1000 ) {
+	// 	i= i + 1;
+	// }
 	
-	plic_enable_interrupt(3, 0);
+	// plic_irq_set_enabled(3, 0);
 
 	// //init plic module
 	// plic_init();

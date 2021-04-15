@@ -183,12 +183,39 @@ void plic_set_trigger_type(bool type) {
   mem_write32(PLIC_BASE_ADDRESS, RV_PLIC_LE_REG_OFFSET, type);
 }
 
+typedef struct plic_reg_info {
+  ptrdiff_t offset;
+  uint32_t bit_index;
+} plic_reg_info_t;
 
-void dif_plic_irq_set_enabled(uint32_t irq, bool state) {
+static ptrdiff_t plic_offset_from_reg0(uint32_t irq) {
+  uint8_t register_index = irq / RV_PLIC_PARAM_REG_WIDTH;
+  return register_index * sizeof(uint32_t);
+}
 
-  uint32_t reg = mem_read32(PLIC_BASE_ADDRESS, RV_PLIC_IE0_REG_OFFSET);
+static uint8_t plic_irq_bit_index(uint32_t irq) {
+  return irq % RV_PLIC_PARAM_REG_WIDTH;
+}
+
+static plic_reg_info_t plic_irq_enable_reg_info(uint32_t irq) {
+  ptrdiff_t offset = plic_offset_from_reg0(irq);
+  return (plic_reg_info_t){
+      .offset = RV_PLIC_IE0_REG_OFFSET + offset,
+      .bit_index = plic_irq_bit_index(irq),
+  };
+}
+
+
+void plic_irq_set_enabled(uint32_t irq, bool state) {
+
+  plic_reg_info_t reg_info = plic_irq_enable_reg_info(irq);
+  uint32_t reg;
+
+  // uint32_t reg = mem_read32(PLIC_BASE_ADDRESS, RV_PLIC_IE0_REG_OFFSET);
+
   uint8_t bit_index = irq % RV_PLIC_PARAM_REG_WIDTH;
-  reg = bitfield_bit32_write(reg, bit_index, state);
+  reg = bitfield_bit32_write(reg, reg_info.bit_index, state);
+  reg = state << irq; //need to fix
   mem_write32(PLIC_BASE_ADDRESS, RV_PLIC_IE0_REG_OFFSET, reg);
 
 }

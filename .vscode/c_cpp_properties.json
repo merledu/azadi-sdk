@@ -5,7 +5,8 @@
       "includePath": [
         "${workspaceFolder}/bsp/*",
         "${workspaceFolder}/bsp/include/*/*",
-        "/home/usman/Documents/fyp/azadi-sdk/bsp/include"
+        "/home/usman/Documents/fyp/azadi-sdk/bsp/include",
+        "/home/usman/Documents/azadi-sdk/bsp/include"
       ],
       "defines": [],
       "compilerPath": "/usr/bin/gcc",
