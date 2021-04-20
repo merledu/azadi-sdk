@@ -74,6 +74,5 @@ LREG x1, 1*REGSIZE(sp)
   LREG x29, 29*REGSIZE(sp)
   LREG x30, 30*REGSIZE(sp)
   LREG x31, 31*REGSIZE(sp)
-
   addi sp, sp, 32*REGSIZE
   mret 

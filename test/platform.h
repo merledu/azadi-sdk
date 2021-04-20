@@ -31,6 +31,13 @@
 /*!Percentage of Free Memory to be used as stack (0-100). The remaining space will be used by heap */
 #define HEAP_PERCENTAGE 50 /*! DDR3 Memory Size */
 
+
+/* TIMER */
+
+#define TIMER_BASE_ADDRESS 0x40000000
+#define TIMER_CMP_OFFSET 0x10c
+
+
 /*!Pulse Width Modulation Start Offsets */
 #define PWM_BASE_ADDRESS 0x00030000 /*PWM Base address*/
 #define PWM_MODULE_OFFSET 0x00000100 /*Offset value to be incremented for each interface*/
@@ -55,6 +62,8 @@
 #define I2C0_BASE 0x00040000 /*! I2C Start Address */
 #define I2C_OFFSET 0x000
 #define MAX_I2C_COUNT 1
+
+
 
 
 /*! Programmable Logic Interrupt Interface */

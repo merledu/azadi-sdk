@@ -1,8 +1,7 @@
 #include <stdio.h>
-#include "gpio.h"
-
-int main(){
-
-    write_gpio(3, 1);
-    return 0;
+#include "pwm.h"
+int main()
+{
+    PWM_DUTYCYCLE(2,3);
+return 0;
 }
