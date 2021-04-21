@@ -10,13 +10,13 @@ inline void mem_write32(uint32_t base, uint32_t offset,
 }
 
 
-// void gpio_direct_bit_write(uint32_t offset, uint32_t index, bool val) {
-//   const uint32_t mask = index_to_mask(index % 32);
+void gpio_direct_bit_write(uint32_t offset, uint32_t index, bool val) {
+  const uint32_t mask = index_to_mask(index % 32);
   
-//   mem_write32(GPIO_START, offset,
-//                       (mask << 32) | (val ? mask : 0u));
+  mem_write32(GPIO_START, offset,
+                      (mask << 31) | (val ? mask : 0u));
 
-// }
+}
 
 // void gpio_masked_bit_write(uint32_t reg_lower_offset,
 //                                                uint32_t reg_upper_offset,
@@ -28,6 +28,14 @@ inline void mem_write32(uint32_t base, uint32_t offset,
 //   mem_write32(GPIO_START, offset, (mask << 16) | (val ? mask : 0u));
 
 // }
+
+void gpio_intr_enable(uint32_t index){
+  gpio_direct_bit_write(GPIO_START, GPIO_INTR_ENABLE_REG_OFFSET, index );
+}
+
+void gpio_intr_type(uint32_t index){
+  gpio_direct_bit_write(GPIO_START, GPIO_INTR_CTRL_EN_LVLHIGH_REG_OFFSET, index );
+}
 
 static void gpio_masked_bit_write(uint32_t reg_lower_offset,
                                            uint32_t reg_upper_offset,

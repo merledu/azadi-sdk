@@ -46,24 +46,24 @@ int main(void){
 	register unsigned int retval;
 	int i;
 
-	uint32_t *gpio_intr; 
-	gpio_intr = (uint32_t *)(GPIO_START + GPIO_INTR_ENABLE_REG_OFFSET);
-	*gpio_intr = 8;
-	
-	uint32_t *lvlhigh;
-	lvlhigh = (uint32_t *)(GPIO_START + GPIO_INTR_CTRL_EN_LVLHIGH_REG_OFFSET);
-	*lvlhigh = 8;
+	// uint32_t *gpio_intr; 
+	// gpio_intr = (uint32_t *)(GPIO_START + GPIO_INTR_ENABLE_REG_OFFSET);
+	// *gpio_intr = 8;
 
+	// uint32_t *lvlhigh;
+	// lvlhigh = (uint32_t *)(GPIO_START + GPIO_INTR_CTRL_EN_LVLHIGH_REG_OFFSET);
+	// *lvlhigh = 8;
+
+	// gpio_intr_enable(3);
+	// gpio_intr_type(3);
+	
 	plic_set_threshold(2);
 	plic_set_priority(3, 3);
-	plic_irq_set_enabled(3, 1);
+	//1 on third pin
+	plic_enable_interrupt(3, 8);
+	plic_set_trigger_type(8);
 	
-	// i = 0;
-	// while(i < 1000 ) {
-	// 	i= i + 1;
-	// }
 	
-	// plic_irq_set_enabled(3, 0);
 
 	// //init plic module
 	// plic_init();
