@@ -54,14 +54,15 @@ int main(void){
 	// lvlhigh = (uint32_t *)(GPIO_START + GPIO_INTR_CTRL_EN_LVLHIGH_REG_OFFSET);
 	// *lvlhigh = 8;
 
-	// gpio_intr_enable(3);
-	// gpio_intr_type(3);
+	gpio_intr_enable(3);
+	gpio_intr_type(3);
 	
 	plic_set_threshold(2);
 	plic_set_priority(3, 3);
+	plic_set_priority(13, 3);
 	//1 on third pin
-	plic_enable_interrupt(3, 8);
-	plic_set_trigger_type(8);
+	plic_enable_interrupt(3, 8192);
+	plic_set_trigger_type(0);
 	
 	
 
@@ -75,14 +76,14 @@ int main(void){
 	//set the corresponding isr for interrupt id 7
 	// isr_table[PLIC_INTERRUPT_3] = handle_button_press;
 
-	// // Enable Global (PLIC) interrupts.
-	// asm volatile("li      t0, 8\t\n"
-	// 	     "csrrs   zero, mstatus, t0\t\n"
-	// 	    );
+	// Enable Global (PLIC) interrupts.
+	asm volatile("li      t0, 8\t\n"
+		     "csrrs   zero, mstatus, t0\t\n"
+		    );
 
-	// // Enable Local (PLIC) interrupts.
-	// asm volatile("li      t0, 0x800\t\n"
-	// 	     "csrrs   zero, mie, t0\t\n"
-	// 	    );
+	// Enable Local (PLIC) interrupts.
+	asm volatile("li      t0, 0x800\t\n"
+		     "csrrs   zero, mie, t0\t\n"
+		    );
 	return 0;
 }
