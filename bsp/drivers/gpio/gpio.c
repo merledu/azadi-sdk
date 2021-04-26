@@ -54,13 +54,14 @@ static void gpio_masked_bit_write(uint32_t reg_lower_offset,
 }
 
 void gpio_masked_write(int pin, int val){
+  const uint32_t shifted = index_to_mask(pin % 32);
   gpio_masked_bit_write(GPIO_MASKED_OUT_LOWER_REG_OFFSET,
-                               GPIO_MASKED_OUT_UPPER_REG_OFFSET, 0x0000FFFFu, val);
+                               GPIO_MASKED_OUT_UPPER_REG_OFFSET, 0x0000FFFFu, shifted);
 }
 
-// void gpio_direct_write(long pin, int val){
-//     gpio_direct_bit_write(GPIO_DIRECT_OUT_REG_OFFSET, pin, val);
-// }
+void gpio_direct_write(long pin, int val){
+    gpio_direct_bit_write(GPIO_DIRECT_OUT_REG_OFFSET, pin, val);
+}
 
 // void gpio_direct_write_enable(long pin, int val){
 //     gpio_direct_bit_write(GPIO_DIRECT_OE_REG_OFFSET, pin, val);

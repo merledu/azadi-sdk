@@ -35,12 +35,15 @@
 #include "plic.h"
 #include "plic-regs.h"
 
-/** @fn main
- * @brief sets up the environment for plic feature
- * @return int
- */
 
-#define pin 8
+void handle_button_press(__attribute__((unused)) uint32_t num);
+
+void handle_button_press(__attribute__((unused)) uint32_t num)
+{
+	gpio_direct_write(10, 1);
+}
+
+
 
 int main(void){
 	register unsigned int retval;
@@ -61,9 +64,12 @@ int main(void){
 	plic_set_priority(3, 3);
 	plic_set_priority(13, 3);
 	//1 on third pin
-	plic_enable_interrupt(3, 8192);
+	plic_enable_interrupt(13);
 	plic_set_trigger_type(0);
 	
+
+	isr_table[13] = handle_button_press;
+	isr_table[3] = 0x0110;
 	
 
 	// //init plic module

@@ -8,20 +8,9 @@
 
 
 plic_fptr_t isr_table[PLIC_MAX_INTERRUPT_SRC];
-interrupt_data_t hart0_interrupt_matrix[PLIC_MAX_INTERRUPT_SRC];
+// interrupt_data_t hart0_interrupt_matrix[PLIC_MAX_INTERRUPT_SRC];
 
-unsigned long read_word(uint32_t *addr)
-{
-	return *addr;
-}
-
-/** @fn void write_word(int *addr, unsigned long val)
- * @brief  writes a value to an address
- * @param int*
- * @param unsigned long
- */
-
-
+static uint32_t index_to_mask(uint32_t index) { return 1u << index; }
 
 inline void mem_write32(uint32_t base, uint32_t offset,
                                 uint32_t value) {
@@ -114,8 +103,9 @@ void plic_set_threshold(uint32_t threshold) {
 
 }
 
-void plic_enable_interrupt(uint32_t irq, uint32_t val) {
-  mem_write32(PLIC_BASE_ADDRESS, RV_PLIC_IE0_REG_OFFSET, val);
+void plic_enable_interrupt(uint32_t irq) {
+  const uint32_t mask = index_to_mask(irq % 32);
+  mem_write32(PLIC_BASE_ADDRESS, RV_PLIC_IE0_REG_OFFSET, mask);
 
 }
 
@@ -124,18 +114,18 @@ void plic_set_trigger_type(uint32_t index) {
 }
 
 
-void plic_irq_set_enabled(uint32_t irq, uint8_t value) {
+// void plic_irq_set_enabled(uint32_t irq, uint8_t value) {
 
-  plic_reg_info_t reg_info = plic_irq_enable_reg_info(irq);
-  uint32_t reg;
+//   plic_reg_info_t reg_info = plic_irq_enable_reg_info(irq);
+//   uint32_t reg;
 
-  // uint32_t reg = mem_read32(PLIC_BASE_ADDRESS, RV_PLIC_IE0_REG_OFFSET);
+//   // uint32_t reg = mem_read32(PLIC_BASE_ADDRESS, RV_PLIC_IE0_REG_OFFSET);
 
-  uint8_t bit_index = irq % RV_PLIC_PARAM_REG_WIDTH;
-//   reg = bitfield_bit32_write(reg, reg_info.bit_index, state);
-//   reg = state << irq; //need to fix
-  mem_write32(PLIC_BASE_ADDRESS, RV_PLIC_IE0_REG_OFFSET, value);
-}
+//   uint8_t bit_index = irq % RV_PLIC_PARAM_REG_WIDTH;
+// //   reg = bitfield_bit32_write(reg, reg_info.bit_index, state);
+// //   reg = state << irq; //need to fix
+//   mem_write32(PLIC_BASE_ADDRESS, RV_PLIC_IE0_REG_OFFSET, value);
+// }
 
 void plic_irq_claim(uint32_t *claim_data) {
 

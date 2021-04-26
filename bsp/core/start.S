@@ -12,7 +12,6 @@ _start:
     .option pop
     la sp, __stack_top
     add s0, sp, zero
-    j init
     jal zero, main
     .cfi_endproc
     .end
