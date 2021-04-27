@@ -21,7 +21,7 @@ __asm__ __volatile__ (
 
 /*divisor*/
 
-"li x6 , 0x46;"
+"li x6 , 0xFFFF;"
 "sw x6 , 4(s0);"
 
 /* period */
@@ -46,12 +46,12 @@ __asm__ __volatile__ (
 
 /*divisor*/
 
-"li x6 , 0x64;"
+"li x6 , 0xFFFF;"
 "sw x6 , 0x14(s0);"
 
 /* period */
 
-"li x6 , 0xa;"
+"li x6 , 0x1F4;"
 "sw x6 , 0x18(s0);"
 );
 }

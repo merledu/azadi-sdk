@@ -1,8 +1,8 @@
 #include <stdio.h>
-#include "pwm.h"
+#include "spi.h"
 
 int main(){
-  PWM_DUTYCYCLE(25);
+  delay(25);
     
     return 0;
 }

@@ -38,7 +38,7 @@ __asm__ __volatile__(
 );
 __asm__ __volatile (
 
-"la t0 , 0x20000500;"
+"la t0 , 0x20000300;"
 "csrw mtvec, t0;"
 );
 

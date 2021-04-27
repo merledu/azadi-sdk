@@ -1,79 +1,111 @@
-// Copyright lowRISC contributors.
-// Licensed under the Apache License, Version 2.0, see LICENSE for details.
-// SPDX-License-Identifier: Apache-2.0
+#define UART_BASE_ADDRESS 0x40060000
+#define Cntrl_Register_Offset 0xc
+#define Clock_Frequency 0x1312D00
+#define UART_WRITE_DATA 0x18
+#define UART_INTR_STATE_REG 0x0
+#define UART_INTR_ENABLE_REG 0x4
+#define UART_INTR_STATE_RX_BREAK_ERR_MASK 0x00000001  
 
-// #include "sw/device/lib/uart.h"
-
-// #include "sw/device/lib/arch/device.h"
-#include "bsp/include/uart/dif_uart.h"
-// #include "sw/device/lib/runtime/ibex.h"
-
-#include "platform.h"
-
-static dif_uart_t uart0;
-
-void uart_init(unsigned int baud) {
-  // Note that, due to a GCC bug, we cannot use the standard `(void) expr`
-  // syntax to drop this value on the ground.
-  // See https://gcc.gnu.org/bugzilla/show_bug.cgi?id=25509
-  mmio_region_t base_addr = mmio_region_from_addr(UART0_START);
-  if (dif_uart_init((dif_uart_params_t){.base_addr = base_addr}, &uart0)) {
-  }
-  if (dif_uart_configure(&uart0, (dif_uart_config_t){
-                                     .baudrate = baud,
-                                     .clk_freq_hz = 24 * 1000 * 1000,
-                                     .parity_enable = kDifUartToggleDisabled,
-                                     .parity = kDifUartParityEven,
-                                 })) {
-  }
+void Set_Baud_Rate(int baud_rate)
+{
+unsigned int baud_count = 0;
+int val = 16;
+baud_count = Clock_Frequency/(16*baud_rate);
+int *baud;
+baud = (int*)(UART_BASE_ADDRESS + Cntrl_Register_Offset);
+*baud = (baud_count<<val);
 }
 
-void uart_send_char(char c) {
-  // Note that, due to a GCC bug, we cannot use the standard `(void) expr`
-  // syntax to drop this value on the ground.
-  // See https://gcc.gnu.org/bugzilla/show_bug.cgi?id=25509
-  if (dif_uart_byte_send_polled(&uart0, (uint8_t)c)) {
-  }
+void Uart_Tx_Rdy(char val) {
+
+char *uart_write;
+uart_write = (char*)(UART_BASE_ADDRESS + UART_WRITE_DATA);
+*uart_write = val;
+ __asm__ __volatile (
+
+//writing value of tx to control register
+"li s0 , 0x40060000;" //uart_base_address
+"li x5 , 1;" 
+"sw x5 , 0xc(s0);" //storing value of x5
+
+//tx watermark
+"sw x5 , 0x4(s0);"
+
+//tx_empty
+"li x5 , 1;"
+"li x7 , 2;"
+"sll x6 , x5 , x7;"
+"sw x6 , 0x4(s0);"
+
+//txilvl
+"li x5 , 0;"
+"li x7 , 0x5;"
+"sll x8 , x5 , x7;"
+"sw x5 , 0x1c(s0);"
+
+//SLPBK
+"li x7 , 4;"
+"sll x5 , x5 ,x7;"
+"sw x5 , 0xc(s0);"
+);
 }
 
-void uart_send_str(char *str) {
-  while (*str != '\0') {
-    uart_send_char(*str++);
-  }
+int Uart_Rx_Rdy()
+{  
+__asm__ __volatile__( 
+    "li x5 , 1;"
+    "li s0 , 0x40060000;"
+    //rx enable
+    "sll x6 ,x5 ,x5;"
+    "sw x6 , 0xc(s0);"
+    //rx watermark
+    "sll x6 , x5, x5;"
+    "sw x6 , 0x4(s0); "
+    //rx overflow
+    "li x7, 3;"
+    "sll x6 , x5 , x7;"
+    "sw x6 , 0x4(s0);"
+    //rx frm err
+    "li x7 , 4;"
+    "sll x6 , x5 , x7;"
+    "sw x6 , 0x4(s0);"
+    //rx brk err
+    "li x7 , 5;"
+    "sll x6 , x5 , x7;"
+    "sw x6 , 0x4(s0);"
+    //rx timeout
+    "li x7 , 6;"
+    "sll x6 , x5 , x7;"
+    "sw x6 , 0x4(s0);"
+
+    //LLPBK
+"li x7 , 5;"
+"sll x5 , x5 ,x7;"
+"sw x5 , 0xc(s0);"
+);
 }
 
-size_t uart_send_buf(void *data, const char *buf, size_t len) {
-  for (size_t i = 0; i < len; ++i) {
-    uart_send_char(buf[i]);
-  }
-  return len;
-}
+void Uart_Interrupt_Routine()
+{
+int *intr_state;
+intr_state = (int*)(UART_BASE_ADDRESS + UART_INTR_STATE_REG);
+int intr_state_mask = 0;
+char uart_ch;
+int *intr_enable_reg;
 
-// const buffer_sink_t uart_stdout = {
-//     .data = NULL, .sink = &uart_send_buf,
-// };
+  // Turn off Interrupt Enable
+  intr_enable_reg = (int*)(UART_BASE_ADDRESS + UART_INTR_ENABLE_REG);
+  //(int*)(UART_BASE_ADDRESS +UART_INTR_ENABLE_REG) = (UART_BASE_ADDRESS + UART_INTR_ENABLE_REG) & 0xFFFFFF00; 
+*intr_enable_reg = 0x40060004 & 0xFFFFFF00;
 
-#define hexchar(i) (((i & 0xf) > 9) ? (i & 0xf) - 10 + 'A' : (i & 0xf) + '0')
+if (*intr_state & UART_INTR_STATE_RX_BREAK_ERR_MASK) {
+    // Do something ...
 
-void uart_send_uint(uint32_t n, int bits) {
-  for (int i = bits - 4; i >= 0; i -= 4) {
-    uart_send_char(hexchar(n >> i));
-  }
-}
+  __asm__  __volatile__(
 
-int uart_rcv_char(char *c) {
-  size_t num_bytes = 0;
-  if (dif_uart_rx_bytes_available(&uart0, &num_bytes) != kDifUartOk) {
-    return -1;
+     "li s0 , 0x40060000;"
+      "li x5 , 0;"
+      "sw x5 , 0x4(s0);"
+  );
   }
-  if (num_bytes == 0) {
-    return -1;
-  }
-  // The pointer cast from char* to uint8_t* is dangerous. This needs to be
-  // revisited.
-  if (dif_uart_bytes_receive(&uart0, 1, (uint8_t *)c, NULL) != kDifUartOk) {
-    return -1;
-  }
-
-  return 0;
 }

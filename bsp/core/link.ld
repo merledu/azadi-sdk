@@ -12,7 +12,6 @@ ENTRY(_start)
 SECTIONS
 {
 PROVIDE( __stack_top = ORIGIN(DCCM) + LENGTH(DCCM));
-
 .init :
 {
   KEEP (*(SORT_NONE(.init)))
