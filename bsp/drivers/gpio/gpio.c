@@ -1,6 +1,8 @@
 #include "gpio.h"
 #include "platform.h"
 #include <stdbool.h>
+#include <stdint.h>
+#include <stddef.h>
 
 static uint32_t index_to_mask(uint32_t index) { return 1u << index; }
 
@@ -9,6 +11,9 @@ inline void mem_write32(uint32_t base, uint32_t offset,
   ((volatile uint32_t *)base)[offset / sizeof(uint32_t)] = value;
 }
 
+inline uint32_t mem_read32(uint32_t base, ptrdiff_t offset) {
+  return ((volatile uint32_t *)base)[offset / sizeof(uint32_t)];
+}
 
 void gpio_direct_bit_write(uint32_t offset, uint32_t index, bool val) {
   const uint32_t mask = index_to_mask(index % 32);
@@ -61,6 +66,15 @@ void gpio_masked_write(int pin, int val){
 
 void gpio_direct_write(long pin, int val){
     gpio_direct_bit_write(GPIO_DIRECT_OUT_REG_OFFSET, pin, val);
+}
+
+void gpio_direct_write_all(uint32_t state){
+  mem_write32(GPIO_START, GPIO_DIRECT_OUT_REG_OFFSET, state);
+}
+
+
+uint32_t gpio_read_all(){
+  return mem_read32(GPIO_START, GPIO_DATA_IN_REG_OFFSET);
 }
 
 // void gpio_direct_write_enable(long pin, int val){

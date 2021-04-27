@@ -83,11 +83,11 @@ uint32_t interrupt_claim_request()
 
 void mach_plic_handler( __attribute__((unused)) uintptr_t int_id, __attribute__((unused)) uintptr_t epc)
 {
-	uint32_t  * interrupt_id;
+	uint32_t interrupt_id;
 
-	plic_irq_claim(interrupt_id);
+	interrupt_id =  plic_irq_claim();
 
-	isr_table[*interrupt_id](*interrupt_id);
+	isr_table[interrupt_id](interrupt_id);
 
 	plic_irq_complete(interrupt_id);
 }
@@ -127,18 +127,19 @@ void plic_set_trigger_type(uint32_t index) {
 //   mem_write32(PLIC_BASE_ADDRESS, RV_PLIC_IE0_REG_OFFSET, value);
 // }
 
-void plic_irq_claim(uint32_t *claim_data) {
+uint32_t plic_irq_claim() {
 
-  *claim_data = mem_read32(PLIC_BASE_ADDRESS, RV_PLIC_CC0_REG_OFFSET);
+  uint32_t claim_data = mem_read32(PLIC_BASE_ADDRESS, RV_PLIC_CC0_REG_OFFSET);
+  return claim_data;
 
 }
 
-void plic_irq_complete(const uint32_t *complete_data) {
+void plic_irq_complete(const uint32_t complete_data) {
 
   // Write back the claimed IRQ ID to the target specific CC register,
   // to notify the PLIC of the IRQ completion.
   mem_write32(PLIC_BASE_ADDRESS, RV_PLIC_CC0_REG_OFFSET,
-                      *complete_data);
+                      complete_data);
 
 }
 

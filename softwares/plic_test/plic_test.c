@@ -40,7 +40,8 @@ void handle_button_press(__attribute__((unused)) uint32_t num);
 
 void handle_button_press(__attribute__((unused)) uint32_t num)
 {
-	gpio_direct_write(10, 1);
+  uint32_t state = gpio_read_all();
+   gpio_direct_write_all(state); 
 }
 
 
@@ -69,7 +70,6 @@ int main(void){
 	
 
 	isr_table[13] = handle_button_press;
-	isr_table[3] = 0x0110;
 	
 
 	// //init plic module
