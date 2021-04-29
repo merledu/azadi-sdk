@@ -1,7 +1,4 @@
-#define PWM_BASE_ADDRESS 0x400b0000
-#define PWM_DUTY_CYCLE_OFFSET 0xc
-#define PWM_DUTY_CYCLE_OFFSET2 0x1c
-
+#include "pwm.h"
 void PWM_DUTYCYCLE(int channel , int a)
 {
 
@@ -46,12 +43,12 @@ __asm__ __volatile__ (
 
 /*divisor*/
 
-"li x6 , 0xFFFF;"
+"li x6 , 0xFF38;"
 "sw x6 , 0x14(s0);"
 
 /* period */
 
-"li x6 , 0x1F4;"
+"li x6 , 0x99;"
 "sw x6 , 0x18(s0);"
 );
 }

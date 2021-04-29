@@ -1,8 +1,7 @@
 #include <stdio.h>
-#include "spi.h"
+#include "timer.h"
 int main()
 {   
-  Set_Speed(2);
-  Spi_Write('w',0);
+delay(5);
 return 0;
 }

@@ -1,6 +1,5 @@
-#include "platform.h"
-#define TIMER_BASE_ADDRESS  0x40000000
-#define TIMER_CMP_OFFSET 0x10c
+#include "timer.h"
+
 void delay(int a)
 {
 
