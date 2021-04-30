@@ -1,6 +1,6 @@
-
 .section .init, "ax"
 .global _start
+
 _start:
     la t0, trap_entry
     csrw mtvec, t0
