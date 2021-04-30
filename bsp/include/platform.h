@@ -56,6 +56,11 @@
 #define I2C_OFFSET 0x000
 #define MAX_I2C_COUNT 1
 
+/* TIMER */
+
+#define TIMER_BASE_ADDRESS 0x40000000
+#define TIMER_CMP_OFFSET 0x10c
+
 
 /*! Programmable Logic Interrupt Interface */
 #define PLIC_BASE_ADDRESS 0x40050000 /*! PLIC Interface Start */
