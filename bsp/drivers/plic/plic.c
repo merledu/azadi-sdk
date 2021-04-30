@@ -8,20 +8,9 @@
 
 
 plic_fptr_t isr_table[PLIC_MAX_INTERRUPT_SRC];
-interrupt_data_t hart0_interrupt_matrix[PLIC_MAX_INTERRUPT_SRC];
+// interrupt_data_t hart0_interrupt_matrix[PLIC_MAX_INTERRUPT_SRC];
 
-unsigned long read_word(uint32_t *addr)
-{
-	return *addr;
-}
-
-/** @fn void write_word(int *addr, unsigned long val)
- * @brief  writes a value to an address
- * @param int*
- * @param unsigned long
- */
-
-
+static uint32_t index_to_mask(uint32_t index) { return 1u << index; }
 
 inline void mem_write32(uint32_t base, uint32_t offset,
                                 uint32_t value) {
@@ -60,129 +49,6 @@ static ptrdiff_t plic_priority_reg_offset(uint32_t irq) {
   return RV_PLIC_PRIO0_REG_OFFSET + offset;
 }
 
-void interrupt_complete(uint32_t interrupt_id)
-{
-
-	uint32_t *claim_addr =  (uint32_t *) (PLIC_BASE_ADDRESS +
-					      RV_PLIC_CC0_REG_OFFSET);
-
-	*claim_addr = interrupt_id;
-	hart0_interrupt_matrix[interrupt_id].state = SERVICED;
-	hart0_interrupt_matrix[interrupt_id].count++;
-}
-
-// void configure_interrupt_pin( __attribute__((unused)) uint32_t id)
-// {
-
-// 	uint32_t read_data;
-
-// 	/*
-// 	   GPIO0 -> Int id 7
-// 	   GPIO15 -> Int id 21
-// 	   Refer platform.h for full memory map.
-// 	 */
-
-// 	read_data = read_word(GPIO_DIRECTION_CNTRL_REG);
-
-// 	write_word(GPIO_DIRECTION_CNTRL_REG, (read_data) & \
-// 		   (0xFFFFFFFF & ~(1 << (id-7))));
-// }
-
-uint32_t interrupt_claim_request()
-{
-	uint32_t *interrupt_claim_address = NULL;
-	uint32_t interrupt_id;
-	interrupt_claim_address = (uint32_t *)(PLIC_BASE_ADDRESS +
-					       RV_PLIC_CC0_REG_OFFSET);
-	interrupt_id = *interrupt_claim_address;
-	return interrupt_id;
-}
-
-void mach_plic_handler( __attribute__((unused)) uintptr_t int_id, __attribute__((unused)) uintptr_t epc)
-{
-	uint32_t  interrupt_id;
-
-	interrupt_id = interrupt_claim_request();
-
-	hart0_interrupt_matrix[interrupt_id].state = ACTIVE;
-
-	isr_table[interrupt_id](interrupt_id);
-
-	interrupt_complete(interrupt_id);
-}
-
-void interrupt_enable(uint32_t interrupt_id)
-{
-	uint8_t *interrupt_enable_addr;
-	uint8_t current_value = 0x00, new_value;
-
-	interrupt_enable_addr = (uint8_t *) (PLIC_BASE_ADDRESS +
-			RV_PLIC_IE0_REG_OFFSET);
-
-	*interrupt_enable_addr = 0x1 << interrupt_id;
-}
-
-void interrupt_disable(uint32_t interrupt_id)
-{
-	uint8_t *interrupt_disable_addr = 0;
-
-
-	interrupt_disable_addr = (uint8_t *) (PLIC_BASE_ADDRESS +
-					      RV_PLIC_IE0_REG_OFFSET);
-
-	*interrupt_disable_addr = 0x0 << interrupt_id;
-
-	hart0_interrupt_matrix[interrupt_id].state = INACTIVE;
-}
-
-// void set_interrupt_threshold(uint32_t priority_value)
-// {
-
-// 	uint32_t *interrupt_threshold_priority = NULL;
-
-// 	interrupt_threshold_priority = (uint32_t *) (PLIC_BASE_ADDRESS +
-// 						     RV_PLIC_THRESHOLD0_REG_OFFSET);
-
-// 	*interrupt_threshold_priority = priority_value;
-
-// }
-
-// void set_interrupt_priority(uint32_t priority_reg, uint32_t int_id, int priority)
-// {
-
-// 	uint32_t * interrupt_priority_address;
-
-// 	/*
-// 	   base address + priority offset + 4*interruptId
-// 	 */
-
-// 	interrupt_priority_address = (uint32_t *) (PLIC_BASE_ADDRESS +
-// 						   priority_reg);
-
-// 	*interrupt_priority_address = 3;
-
-// }
-
-void plic_set_priority(int irq, uint32_t priority) {
-
-  ptrdiff_t offset = plic_priority_reg_offset(irq);
-  mem_write32(PLIC_BASE_ADDRESS, offset, priority);
-}
-
-void plic_set_threshold(uint32_t threshold) {
-  mem_write32(PLIC_BASE_ADDRESS, RV_PLIC_THRESHOLD0_REG_OFFSET, threshold);
-
-}
-
-void plic_enable_interrupt(uint32_t irq, uint32_t val) {
-  mem_write32(PLIC_BASE_ADDRESS, RV_PLIC_IE0_REG_OFFSET, val);
-
-}
-
-void plic_set_trigger_type(bool type) {
-  mem_write32(PLIC_BASE_ADDRESS, RV_PLIC_LE_REG_OFFSET, type);
-}
-
 typedef struct plic_reg_info {
   ptrdiff_t offset;
   uint32_t bit_index;
@@ -205,18 +71,75 @@ static plic_reg_info_t plic_irq_enable_reg_info(uint32_t irq) {
   };
 }
 
+uint32_t interrupt_claim_request()
+{
+	uint32_t *interrupt_claim_address = NULL;
+	uint32_t interrupt_id;
+	interrupt_claim_address = (uint32_t *)(PLIC_BASE_ADDRESS +
+					       RV_PLIC_CC0_REG_OFFSET);
+	interrupt_id = *interrupt_claim_address;
+	return interrupt_id;
+}
 
-void plic_irq_set_enabled(uint32_t irq, bool state) {
+void mach_plic_handler( __attribute__((unused)) uintptr_t int_id, __attribute__((unused)) uintptr_t epc)
+{
+	uint32_t interrupt_id;
 
-  plic_reg_info_t reg_info = plic_irq_enable_reg_info(irq);
-  uint32_t reg;
+	interrupt_id =  plic_irq_claim();
 
-  // uint32_t reg = mem_read32(PLIC_BASE_ADDRESS, RV_PLIC_IE0_REG_OFFSET);
+	isr_table[interrupt_id](interrupt_id);
 
-  uint8_t bit_index = irq % RV_PLIC_PARAM_REG_WIDTH;
-  reg = bitfield_bit32_write(reg, reg_info.bit_index, state);
-  reg = state << irq; //need to fix
-  mem_write32(PLIC_BASE_ADDRESS, RV_PLIC_IE0_REG_OFFSET, reg);
+	plic_irq_complete(interrupt_id);
+}
+
+void plic_set_priority(int irq, uint32_t priority) {
+
+  ptrdiff_t offset = plic_priority_reg_offset(irq);
+  mem_write32(PLIC_BASE_ADDRESS, offset, priority);
+}
+
+void plic_set_threshold(uint32_t threshold) {
+  mem_write32(PLIC_BASE_ADDRESS, RV_PLIC_THRESHOLD0_REG_OFFSET, threshold);
+
+}
+
+void plic_enable_interrupt(uint32_t irq) {
+  const uint32_t mask = index_to_mask(irq % 32);
+  mem_write32(PLIC_BASE_ADDRESS, RV_PLIC_IE0_REG_OFFSET, mask);
+
+}
+
+void plic_set_trigger_type(uint32_t index) {
+  mem_write32(PLIC_BASE_ADDRESS, RV_PLIC_LE_REG_OFFSET, index);
+}
+
+
+// void plic_irq_set_enabled(uint32_t irq, uint8_t value) {
+
+//   plic_reg_info_t reg_info = plic_irq_enable_reg_info(irq);
+//   uint32_t reg;
+
+//   // uint32_t reg = mem_read32(PLIC_BASE_ADDRESS, RV_PLIC_IE0_REG_OFFSET);
+
+//   uint8_t bit_index = irq % RV_PLIC_PARAM_REG_WIDTH;
+// //   reg = bitfield_bit32_write(reg, reg_info.bit_index, state);
+// //   reg = state << irq; //need to fix
+//   mem_write32(PLIC_BASE_ADDRESS, RV_PLIC_IE0_REG_OFFSET, value);
+// }
+
+uint32_t plic_irq_claim() {
+
+  uint32_t claim_data = mem_read32(PLIC_BASE_ADDRESS, RV_PLIC_CC0_REG_OFFSET);
+  return claim_data;
+
+}
+
+void plic_irq_complete(const uint32_t complete_data) {
+
+  // Write back the claimed IRQ ID to the target specific CC register,
+  // to notify the PLIC of the IRQ completion.
+  mem_write32(PLIC_BASE_ADDRESS, RV_PLIC_CC0_REG_OFFSET,
+                      complete_data);
 
 }
 
@@ -270,34 +193,3 @@ void isr_default(uint32_t interrupt_id)
 // 	}
 // 	set_interrupt_threshold(2);
 // }
-
-// void plic_init_alt(uint32_t intr_id, int threshold, int priority){
-	
-// 	uint32_t *plic_intr_en;
-// 	plic_intr_en = (uint32_t *)(PLIC_BASE_ADDRESS + RV_PLIC_IE0_REG_OFFSET);
-// 	*plic_intr_en = (1 << intr_id);
-	
-// 	uint32_t *plic_intr_threshold;
-// 	plic_intr_threshold = (uint32_t *)(PLIC_BASE_ADDRESS + RV_PLIC_THRESHOLD0_REG_OFFSET);
-// 	*plic_intr_threshold = threshold;
-
-// 	uint32_t *plic_intr_priority;
-// 	plic_intr_priority = (uint32_t *)(PLIC_BASE_ADDRESS + RV_PLIC_PRIO3_REG_OFFSET);
-// 	*plic_intr_priority = priority;
-// }
-
-
-void configure_interrupt(uint32_t int_id)
-{
-
-	/*
-	   Call only for GPIO pins
-	 */
-	// if(int_id >6 && int_id < 22)
-	// {
-	// 	configure_interrupt_pin(int_id);
-	// }
-
-	interrupt_enable(int_id);
-
-}

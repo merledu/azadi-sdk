@@ -67,11 +67,14 @@ void set_interrupt_priority(uint32_t priority_value, uint32_t int_id, int priori
 void configure_interrupt_pin(uint32_t pin);
 void plic_init(void);
 void configure_interrupt(uint32_t int_id);
-void plic_set_trigger_type(bool type);
+void plic_set_trigger_type(uint32_t index);
 void plic_set_threshold(uint32_t threshold);
 void plic_set_priority(int irq, uint32_t priority);
-void plic_enable_interrupt(uint32_t irq, uint32_t val);
-void plic_irq_set_enabled(uint32_t irq, bool state);
+void plic_enable_interrupt(uint32_t irq);
+uint32_t plic_irq_claim();
+void plic_irq_complete(const uint32_t complete_data);
+// void plic_irq_set_enabled(uint32_t irq, bool state);
+void plic_irq_set_enabled(uint32_t irq, uint8_t state);
 
 typedef struct bitfield_field32 {
   /** The field mask. Usually all ones. */
