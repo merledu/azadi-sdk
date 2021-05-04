@@ -1,4 +1,4 @@
-PROGRAM ?= plic_test
+PROGRAM ?= hello
 
 FILEPATH = softwares/$(PROGRAM)
 # paths
@@ -38,7 +38,7 @@ compile-drivers :
 	$(GCC) $(GCCFLAGS) -I$(INCLUDE) -c $(DRIVERS)/gpio/gpio.c -o generated/gpio.o -lgcc
 	$(GCC) $(GCCFLAGS) -I$(INCLUDE) -c $(DRIVERS)/timer/timer.c -o generated/timer.o -lgcc
 	$(GCC) $(GCCFLAGS) -I$(INCLUDE) -c $(DRIVERS)/pwm/pwm.c -o generated/pwm.o -lgcc
-	$(GCC) $(GCCFLAGS) -I$(INCLUDE) -c $(DRIVERS)/uart/uart.c -o generated/uart.o -lgcc
+	$(GCC) $(GCCFLAGS) -I$(INCLUDE) -c $(DRIVERS)/sa/uart.c -o generated/uart.o -lgcc
 	$(GCC) $(GCCFLAGS) -I$(INCLUDE) -c $(DRIVERS)/plic/plic.c -o generated/plic.o -lgcc	
 	$(GCC) $(GCCFLAGS) -I$(INCLUDE) -c $(DRIVERS)/spi/spi.c -o generated/spi.o -lgcc
 build-drivers : compile-drivers
@@ -47,8 +47,8 @@ build-drivers : compile-drivers
 build : clean build-drivers
 	@echo "building $(FILEPATH)/$(PROGRAM).c"
 	@mkdir $(FILEPATH)/output
-	$(GCC) $(GCCFLAGS) -I$(INCLUDE) -I$(DRIVERS)/timer -I$(DRIVERS)/spi -I$(DRIVERS)/uart -I$(DRIVERS)/pwm -c $(FILEPATH)/$(PROGRAM).c -o $(FILEPATH)/output/$(PROGRAM).o -lgcc
-	$(GCC) $(LINK_FLAGS) $(CORE)/start.S $(CORE)/trap.S $(CORE)/timerh.S generated/timer.o generated/spi.o generated/uart.o  generated/pwm.o generated/trap.o $(FILEPATH)/output/$(PROGRAM).o -o $(FILEPATH)/output/$(PROGRAM).merl -lgcc
+	$(GCC) $(GCCFLAGS) -I$(INCLUDE) -I$(DRIVERS)/timer -I$(DRIVERS)/gpio -I$(DRIVERS)/plic -I$(DRIVERS)/sa -c $(FILEPATH)/$(PROGRAM).c -o $(FILEPATH)/output/$(PROGRAM).o -lgcc
+	$(GCC) $(LINK_FLAGS) $(CORE)/start.S $(CORE)/trap.S $(CORE)/timerh.S generated/timer.o generated/gpio.o generated/uart.o generated/trap.o $(FILEPATH)/output/$(PROGRAM).o -o $(FILEPATH)/output/$(PROGRAM).merl -lgcc
 	$(OBJDMP) $(OBJFLAGS) $(FILEPATH)/output/$(PROGRAM).merl > $(FILEPATH)/output/$(PROGRAM).dump 
 	$(RISCV)elf2hex --bit-width 32 --input $(FILEPATH)/output/$(PROGRAM).merl --output program.hex
 
@@ -56,8 +56,8 @@ test : clean
 	@echo "building $(FILEPATH)/$(PROGRAM).c"
 	@mkdir $(FILEPATH)/output
 	@mkdir -p generated
-	$(GCC) $(GCCFLAGS) -I $(INCLUDE) -c $(DRIVERS)/timer/timer.c -c $(DRIVERS)/uart/uart.c $(DRIVERS)/spi/spi.c -o generated/timer.o generated/spi.o generated/uart.o generated/pwm.o -lgcc
-	$(GCC) $(GCCFLAGS) -I $(INCLUDE) -I $(DRIVERS)/timer -I $(DRIVERS)/uart -I $(DRIVERS)/pwm -I $(DRIVERS)/spi -c $(FILEPATH)/$(PROGRAM).c -o $(FILEPATH)/output/$(PROGRAM).o -lgcc
+	$(GCC) $(GCCFLAGS) -I $(INCLUDE) -c $(DRIVERS)/timer/timer.c -c $(DRIVERS)/sa/uart.c $(DRIVERS)/spi/spi.c -o generated/timer.o generated/spi.o generated/uart.o generated/pwm.o -lgcc
+	$(GCC) $(GCCFLAGS) -I $(INCLUDE) -I $(DRIVERS)/timer -I $(DRIVERS)/sa -I $(DRIVERS)/pwm -I $(DRIVERS)/spi -c $(FILEPATH)/$(PROGRAM).c -o $(FILEPATH)/output/$(PROGRAM).o -lgcc
 	$(GCC) $(LINK_FLAGS) $(CORE)/start.S $(CORE)/timerh.S generated/timer.o generated/uart.o  generated/pwm.o $(FILEPATH)/output/$(PROGRAM).o -o $(FILEPATH)/output/$(PROGRAM).merl -lgcc
 	$(OBJDMP) $(OBJFLAGS) $(FILEPATH)/output/$(PROGRAM).merl > $(FILEPATH)/output/$(PROGRAM).dump 
 	$(RISCV)elf2hex --bit-width 32 --input $(FILEPATH)/output/$(PROGRAM).merl --output program.hex

@@ -1,12 +1,6 @@
 .global timer_handler
-.align 8
-nop
-nop
-nop
-nop
-nop
-nop
-nop
+.align 2
+
 timer_handler:
 
 li s0 , 0x40000000
