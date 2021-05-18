@@ -2,6 +2,6 @@
 #include "timer.h"
 int main()
 {   
-uart_send_char('w');
+delay(5);
 return 0;
 }

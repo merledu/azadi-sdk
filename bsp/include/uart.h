@@ -46,7 +46,7 @@ void uart_send_str(char *str);
 size_t uart_send_buf(void *data, const char *buf, size_t len);
 int uart_rcv_char(char *c);
 void uart_send_uint(uint32_t n, int bits);
-extern uint32_t mem_read32(uint32_t base, ptrdiff_t offset);
+// extern uint32_t mem_read32(uint32_t base, ptrdiff_t offset);
 extern uint32_t bitfield_field32_write(uint32_t bitfield,
                                        bitfield_field32_t field,
                                        uint32_t value);
@@ -59,4 +59,7 @@ extern uint32_t bitfield_bit32_write(uint32_t bitfield,
                                      bool value);
 extern bitfield_field32_t bitfield_bit32_to_field32(
     uint32_t bit_index);
+
+extern void mem_write32(uint32_t base, uint32_t offset,
+                                uint32_t value);
 

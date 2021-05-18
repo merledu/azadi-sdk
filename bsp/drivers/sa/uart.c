@@ -7,7 +7,6 @@
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
-
 #include "platform.h"
 
 // static dif_uart_t uart0;
@@ -30,6 +29,11 @@
 
 
 /************* MEMORY FUNCTIONS START **************/
+
+inline uint32_t bitfield_field32_read(uint32_t bitfield,
+                                      bitfield_field32_t field) {
+  return (bitfield >> field.index) & field.mask;
+}
 
 inline bitfield_field32_t bitfield_bit32_to_field32(
     uint32_t bit_index) {

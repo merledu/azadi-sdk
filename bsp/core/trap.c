@@ -19,15 +19,19 @@ uintptr_t handle_trap(uintptr_t mcause, uintptr_t epc)
 	uint32_t shift_length = 0;
 
 	shift_length = 32 - 1;
-	mach_plic_handler(mcause, epc);
+	
 
 	 /* checking for type of trap */
-	// if (mcause & (1 << (shift_length))){
-	// 	ie_entry = extract_ie_code(mcause);
-	// 	mcause_interrupt_table[ie_entry](mcause, epc);
-	// }
-	// else{
-	// 	mcause_trap_table[mcause](mcause, epc);
-	// }
+	if (mcause & (1 << (shift_length))){
+		ie_entry = extract_ie_code(mcause);
+		if (ie_entry == 11)
+			mach_plic_handler(mcause, epc);
+		else if (ie_entry == 7)
+			mach_timer_handler(mcause, epc);
+			
+	}
+	else{
+		mcause_trap_table[mcause](mcause, epc);
+	}
 return epc;
 }
