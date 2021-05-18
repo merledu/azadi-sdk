@@ -4,44 +4,45 @@
 #include "plic-regs.h"
 #include <stdbool.h>
 #include <stdint.h>
+#include "utils.h"
 
 
 
 plic_fptr_t isr_table[PLIC_MAX_INTERRUPT_SRC];
 // interrupt_data_t hart0_interrupt_matrix[PLIC_MAX_INTERRUPT_SRC];
 
-static uint32_t index_to_mask(uint32_t index) { return 1u << index; }
+// static uint32_t index_to_mask(uint32_t index) { return 1u << index; }
 
-inline void mem_write32(uint32_t base, uint32_t offset,
-                                uint32_t value) {
-  ((volatile uint32_t *)base)[offset / sizeof(uint32_t)] = value;
-}
+// inline void mem_write32(uint32_t base, uint32_t offset,
+//                                 uint32_t value) {
+//   ((volatile uint32_t *)base)[offset / sizeof(uint32_t)] = value;
+// }
 
-inline uint32_t mem_read32(uint32_t base, ptrdiff_t offset) {
-  return ((volatile uint32_t *)base)[offset / sizeof(uint32_t)];
-}
+// inline uint32_t mem_read32(uint32_t base, ptrdiff_t offset) {
+//   return ((volatile uint32_t *)base)[offset / sizeof(uint32_t)];
+// }
 
-inline bitfield_field32_t bitfield_bit32_to_field32(
-    uint32_t bit_index) {
-  return (bitfield_field32_t){
-      .mask = 0x1, .index = bit_index,
-  };
-}
+// inline bitfield_field32_t bitfield_bit32_to_field32(
+//     uint32_t bit_index) {
+//   return (bitfield_field32_t){
+//       .mask = 0x1, .index = bit_index,
+//   };
+// }
 
-inline uint32_t bitfield_field32_write(uint32_t bitfield,
-                                       bitfield_field32_t field,
-                                       uint32_t value) {
-  bitfield &= ~(field.mask << field.index);
-  bitfield |= (value & field.mask) << field.index;
-  return bitfield;
-}
+// inline uint32_t bitfield_field32_write(uint32_t bitfield,
+//                                        bitfield_field32_t field,
+//                                        uint32_t value) {
+//   bitfield &= ~(field.mask << field.index);
+//   bitfield |= (value & field.mask) << field.index;
+//   return bitfield;
+// }
 
-inline uint32_t bitfield_bit32_write(uint32_t bitfield,
-                                     uint32_t bit_index,
-                                     bool value) {
-  return bitfield_field32_write(bitfield, bitfield_bit32_to_field32(bit_index),
-                                value ? 0x1u : 0x0u);
-}
+// inline uint32_t bitfield_bit32_write(uint32_t bitfield,
+//                                      uint32_t bit_index,
+//                                      bool value) {
+//   return bitfield_field32_write(bitfield, bitfield_bit32_to_field32(bit_index),
+//                                 value ? 0x1u : 0x0u);
+// }
 
 // Helper function to calculate priority register
 static ptrdiff_t plic_priority_reg_offset(uint32_t irq) {
@@ -144,52 +145,11 @@ void plic_irq_complete(const uint32_t complete_data) {
 }
 
 
-void isr_default(uint32_t interrupt_id)
+
+void plic_init(int p_id)
 {
-	// log_trace("\nisr_default entered\n");
-
-	// if( interrupt_id > 0 && interrupt_id < 7 )  //PWM Interrupts
-	// {
-	// 	/*
-	// 	   Assuming 6 pwm's are there
-	// 	 */
-
-	// 	if(pwm_check_continuous_mode((6-interrupt_id)) == 0)
-	// 	{
-	// 		set_pwm_control_register((6-interrupt_id),0x80);
-	// 	}
-	// }
-
-	// log_info("interrupt [%d] serviced\n",interrupt_id);
-
-	// log_trace("\nisr_default exited\n");
+	plic_set_threshold(2);
+	plic_set_priority(p_id, 3);
+	plic_enable_interrupt(p_id);
+	plic_set_trigger_type(0);
 }
-
-
-// void plic_init()
-// {
-// 	uint32_t int_id = 0;
-// 	mcause_interrupt_table[MACH_EXTERNAL_INTERRUPT] = mach_plic_handler;
-
-// 	hart0_interrupt_matrix[0].state = INACTIVE;
-// 	hart0_interrupt_matrix[0].id = 0;
-// 	hart0_interrupt_matrix[0].priority = 0;
-// 	hart0_interrupt_matrix[0].count = 0;
-
-// 	for(int_id = 1; int_id < PLIC_MAX_INTERRUPT_SRC; int_id++)
-// 	{
-// 		hart0_interrupt_matrix[int_id].state = INACTIVE;
-// 		hart0_interrupt_matrix[int_id].id = int_id;
-// 		hart0_interrupt_matrix[int_id].priority = 3;
-// 		hart0_interrupt_matrix[int_id].count = 0;
-
-// 		interrupt_disable(int_id);
-
-// 		/*assign a default isr for all interrupts*/
-// 		isr_table[int_id] = isr_default;
-
-// 		/*set priority for all interrupts*/
-// 		set_interrupt_priority(RV_PLIC_PRIO3_REG_OFFSET, int_id, 3);
-// 	}
-// 	set_interrupt_threshold(2);
-// }

@@ -41,7 +41,7 @@
 #define SPI2_START 0x00020200 /* Serial Peripheral Interface 2 */
 
 /*!Universal Synchronous Receiver Transmitter Interface Offsets */
-#define UART0_START 0x00011300 /*! UART 0 */
+#define UART0_START 0x40060000 /*! UART 0 */
 #define UART_OFFSET 0x100
 #define MAX_UART_COUNT 3
 

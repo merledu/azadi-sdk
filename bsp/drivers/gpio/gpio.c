@@ -1,19 +1,21 @@
 #include "gpio.h"
+#include "plic.h"
 #include "platform.h"
 #include <stdbool.h>
 #include <stdint.h>
 #include <stddef.h>
+#include "utils.h"
 
-static uint32_t index_to_mask(uint32_t index) { return 1u << index; }
+// static uint32_t index_to_mask(uint32_t index) { return 1u << index; }
 
-inline void mem_write32(uint32_t base, uint32_t offset,
-                                uint32_t value) {
-  ((volatile uint32_t *)base)[offset / sizeof(uint32_t)] = value;
-}
+// inline void mem_write32(uint32_t base, uint32_t offset,
+//                                 uint32_t value) {
+//   ((volatile uint32_t *)base)[offset / sizeof(uint32_t)] = value;
+// }
 
-inline uint32_t mem_read32(uint32_t base, ptrdiff_t offset) {
-  return ((volatile uint32_t *)base)[offset / sizeof(uint32_t)];
-}
+// inline uint32_t mem_read32(uint32_t base, ptrdiff_t offset) {
+//   return ((volatile uint32_t *)base)[offset / sizeof(uint32_t)];
+// }
 
 void gpio_direct_bit_write(uint32_t offset, uint32_t index, bool val) {
   const uint32_t mask = index_to_mask(index % 32);
@@ -76,6 +78,22 @@ void gpio_direct_write_all(uint32_t state){
 uint32_t gpio_read_all(){
   return mem_read32(GPIO_START, GPIO_DATA_IN_REG_OFFSET);
 }
+
+uint32_t gpio_read_pin(int pin){
+  gpio_intr_enable(3);
+	gpio_intr_type(3);
+
+  plic_init(13);
+	
+
+	// isr_table[13] = gpio_read_interrupt;
+  uint32_t state = mem_read32(GPIO_START, GPIO_DATA_IN_REG_OFFSET);
+
+  return state >> pin;
+}
+
+// static void gpio_read_interrupt(){
+// }
 
 // void gpio_direct_write_enable(long pin, int val){
 //     gpio_direct_bit_write(GPIO_DIRECT_OE_REG_OFFSET, pin, val);

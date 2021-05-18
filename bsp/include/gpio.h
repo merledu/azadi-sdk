@@ -93,11 +93,10 @@ Filename: gpio.h
 
 unsigned long read_gpio(uint32_t *addr);
 void gpio_direct_write(long pin, int val);
-extern void mem_write32(uint32_t base, uint32_t offset,
-                                uint32_t value);
 void gpio_direct_write_enable(long pin, int val);
 void gpio_masked_write(int pin, int val);
 void gpio_intr_enable(uint32_t index);
 void gpio_intr_type(uint32_t index);
 void gpio_direct_write_all(uint32_t state);
 uint32_t gpio_read_all();
+uint32_t gpio_read_pin(int pin);

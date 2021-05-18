@@ -65,7 +65,7 @@ void interrupt_disable(uint32_t interrupt_id);
 void set_interrupt_threshold(uint32_t priority_value);
 void set_interrupt_priority(uint32_t priority_value, uint32_t int_id, int priority);
 void configure_interrupt_pin(uint32_t pin);
-void plic_init(void);
+void plic_init(int p_id);
 void configure_interrupt(uint32_t int_id);
 void plic_set_trigger_type(uint32_t index);
 void plic_set_threshold(uint32_t threshold);
@@ -76,24 +76,24 @@ void plic_irq_complete(const uint32_t complete_data);
 // void plic_irq_set_enabled(uint32_t irq, bool state);
 void plic_irq_set_enabled(uint32_t irq, uint8_t state);
 
-typedef struct bitfield_field32 {
-  /** The field mask. Usually all ones. */
-  uint32_t mask;
-  /** The field position in the bitfield, counting from the zero-bit. */
-  uint32_t index;
-} bitfield_field32_t;
+// typedef struct bitfield_field32 {
+//   /** The field mask. Usually all ones. */
+//   uint32_t mask;
+//   /** The field position in the bitfield, counting from the zero-bit. */
+//   uint32_t index;
+// } bitfield_field32_t;
 
 
-extern uint32_t bitfield_bit32_write(uint32_t bitfield,
-                                     uint32_t bit_index,
-                                     bool value);
+// extern uint32_t bitfield_bit32_write(uint32_t bitfield,
+//                                      uint32_t bit_index,
+//                                      bool value);
 
-extern uint32_t bitfield_field32_write(uint32_t bitfield,
-                                       bitfield_field32_t field,
-                                       uint32_t value);
-extern bitfield_field32_t bitfield_bit32_to_field32(
-    uint32_t bit_index);
+// extern uint32_t bitfield_field32_write(uint32_t bitfield,
+//                                        bitfield_field32_t field,
+//                                        uint32_t value);
+// extern bitfield_field32_t bitfield_bit32_to_field32(
+//     uint32_t bit_index);
 
-extern uint32_t mem_read32(uint32_t base, ptrdiff_t offset);
+// extern uint32_t mem_read32(uint32_t base, ptrdiff_t offset);
 
 #endif

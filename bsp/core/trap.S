@@ -3,6 +3,7 @@
 
 .align 2
 nop
+
 trap_entry:
 addi sp, sp, -32*REGSIZE
 .p2align 3
