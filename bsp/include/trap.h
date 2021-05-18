@@ -4,10 +4,10 @@
 #define MAX_MCAUSE_VALUE    2
 
 
-#define MAX_INTERRUPT_VALUE 2
-#define MACH_EXTERNAL_INTERRUPT 0
+#define MAX_INTERRUPT_VALUE 16
+#define MACH_EXTERNAL_INTERRUPT 11
 
-#define MAX_TRAP_VALUE                 2
+#define MAX_TRAP_VALUE                 16
 #define INSTRUCTION_ADDRESS_MISALIGNED  0
 
 typedef void (*mtrap_fptr_t) (uintptr_t trap_cause, uintptr_t epc);
