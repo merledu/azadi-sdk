@@ -1,10 +1,9 @@
 #include <stdio.h>
-#include "spi.h"
+#include "uart.h"
 int main()
 {   
-Set_Speed(4);
-Spi_Write('w', 1);
-Isr_Tx_Spi();
+uart_rcv_char();
+
 
 return 0;
 }

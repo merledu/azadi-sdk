@@ -1,4 +1,3 @@
-
 #include "spi.h"
 #define ZERO 0
 void Set_Speed(int Divider)
@@ -8,7 +7,7 @@ int *div;
 div = (int *)(SPI_BASE_ADDRESS + SPI_DIVIDER_OFFSET );
 *div = Divider;
 }
-void Spi_Write(unsigned char a , int Select_Line)
+void Spi_Write(unsigned char a , int Select_Line, int Char_Len)
 {
 //Write Data
 int *wd;
@@ -21,10 +20,27 @@ Select = (int *)(SPI_BASE_ADDRESS + SPI_SLAVE_SELECT_OFFSET);
 *Select = Select_Line;
 
 //cntrl register configuration
-int b = 6432;
+int b = 50<<7;
 int *cntrl;
+switch (Char_Len)
+{
+case 1:
 cntrl = (int *)(SPI_BASE_ADDRESS + SPI_CNTRL_OFFSET);
-*cntrl = b;
+*cntrl = b + 8;
+break;
+case 2:
+
+cntrl = (int *)(SPI_BASE_ADDRESS + SPI_CNTRL_OFFSET);
+*cntrl = b + 16;
+break;
+case 3:
+cntrl = (int *)(SPI_BASE_ADDRESS + SPI_CNTRL_OFFSET);
+*cntrl = b + 24;
+break;
+default:
+cntrl = (int *)(SPI_BASE_ADDRESS + SPI_CNTRL_OFFSET);
+*cntrl = b + 32;
+}
 }
 void Spi_Read(int Select_Line)
 {
@@ -44,26 +60,4 @@ __asm__ __volatile__(
 );
 }
 
-void Isr_Tx_Spi()
-{
-//clearing rx register
-int *wd;
-wd = (int *)(SPI_BASE_ADDRESS + SPI_TX_OFFSET);
-*wd = ZERO;
-
-//clearing divisor
-int *div;
-div = (int *)(SPI_BASE_ADDRESS + SPI_DIVIDER_OFFSET );
-*div = ZERO;
-
-//clearing control register
-int *cntrl;
-cntrl = (int *)(SPI_BASE_ADDRESS + SPI_CNTRL_OFFSET);
-*cntrl = ZERO;
-
-//clearing slave select
-int *Select;
-Select = (int *)(SPI_BASE_ADDRESS + SPI_SLAVE_SELECT_OFFSET);
-*Select = ZERO;
-}
 

@@ -1,4 +1,4 @@
-PROGRAM ?= plic_test
+PROGRAM ?= hello
 
 FILEPATH = softwares/$(PROGRAM)
 # paths
@@ -22,6 +22,8 @@ LINK_FLAGS = -march=rv32i -mabi=ilp32 -static -nostdlib -nostartfiles -T $(CORE)
 
 upload : build
 	@echo "Uploading..."
+
+hello : build-hello
 
 compile-drivers :
 	@mkdir -p generated
@@ -47,10 +49,19 @@ build-drivers : compile-drivers
 build : clean build-drivers
 	@echo "building $(FILEPATH)/$(PROGRAM).c"
 	@mkdir $(FILEPATH)/output
-	$(GCC) $(GCCFLAGS) -I$(INCLUDE) -I$(DRIVERS)/timer -I$(DRIVERS)/spi -I$(DRIVERS)/uart -I$(DRIVERS)/pwm -c $(FILEPATH)/$(PROGRAM).c -o $(FILEPATH)/output/$(PROGRAM).o -lgcc
-	$(GCC) $(LINK_FLAGS) $(CORE)/start.S $(CORE)/trap.S $(CORE)/timerh.S generated/timer.o generated/spi.o generated/uart.o  generated/pwm.o generated/trap.o $(FILEPATH)/output/$(PROGRAM).o -o $(FILEPATH)/output/$(PROGRAM).merl -lgcc
+	$(GCC) $(GCCFLAGS) -I$(INCLUDE) -I$(DRIVERS)/timer -I$(DRIVERS)/spi -I$(DRIVERS)/uart -I$(DRIVERS)/pwm -I$(DRIVERS)/plic -I$(DRIVERS)/gpio -c $(FILEPATH)/$(PROGRAM).c -o $(FILEPATH)/output/$(PROGRAM).o -lgcc
+	$(GCC) $(LINK_FLAGS) $(CORE)/start.S $(CORE)/trap.S $(CORE)/timerh.S generated/timer.o generated/plic.o generated/gpio.o  generated/spi.o generated/uart.o  generated/pwm.o generated/trap.o $(FILEPATH)/output/$(PROGRAM).o -o $(FILEPATH)/output/$(PROGRAM).merl -lgcc
 	$(OBJDMP) $(OBJFLAGS) $(FILEPATH)/output/$(PROGRAM).merl > $(FILEPATH)/output/$(PROGRAM).dump 
 	$(RISCV)elf2hex --bit-width 32 --input $(FILEPATH)/output/$(PROGRAM).merl --output program.hex
+
+build-hello : clean build-drivers
+	@echo "building $(FILEPATH)/$(PROGRAM).c"
+	@mkdir $(FILEPATH)/output
+	$(GCC) $(GCCFLAGS) -I$(INCLUDE) -I$(DRIVERS)/timer -I$(DRIVERS)/spi -I$(DRIVERS)/uart -I$(DRIVERS)/pwm -c $(FILEPATH)/$(PROGRAM).c -o $(FILEPATH)/output/$(PROGRAM).o -lgcc
+	$(GCC) $(LINK_FLAGS) $(CORE)/start.S $(CORE)/trap.S $(CORE)/timerh.S generated/timer.o  generated/spi.o generated/uart.o  generated/pwm.o generated/trap.o $(FILEPATH)/output/$(PROGRAM).o -o $(FILEPATH)/output/$(PROGRAM).merl -lgcc
+	$(OBJDMP) $(OBJFLAGS) $(FILEPATH)/output/$(PROGRAM).merl > $(FILEPATH)/output/$(PROGRAM).dump 
+	$(RISCV)elf2hex --bit-width 32 --input $(FILEPATH)/output/$(PROGRAM).merl --output program.hex
+
 
 test : clean 
 	@echo "building $(FILEPATH)/$(PROGRAM).c"
