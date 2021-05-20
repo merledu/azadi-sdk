@@ -5,11 +5,18 @@
 void mach_timer_handler(__attribute__((unused)) uintptr_t int_id, __attribute__((unused)) uintptr_t epc){
     __asm__ __volatile__(
         "li s0 , 0x40000000;"
-        "li x5 , 0;"
-        "sw x0 , 0x110(s0);"
+        "li x6 , 0xffffffff;"
+        "li x7 , 0x1;"
+        
+        "sw x6 , 0x10C(s0);"
+        "sw x6 , 0x110(s0);"
+        "sw x0 , 0x104(s0);"
+        "sw x0 , 0x108(s0);"
         "sw x11, 0x100(s0);"
-        "sw x5 , 0x114(s0);"
-        "sw x5 , 0x0(s0);"
+        "sw x0 , 0x114(s0);"
+        "sw x7 , 0x118(s0);"
+        "sw x0 , 0x0(s0);"
+        
         "csrrw x0 , 0x300, x5;"
         "csrrw x0 , 0x304, x5;"
     );
@@ -50,5 +57,9 @@ __asm__ __volatile__(
 "sw x5 , 0x0(s0);"
 
 
+);
+
+__asm__ __volatile__(
+    "wfi;"
 );
 }
