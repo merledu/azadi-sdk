@@ -43,3 +43,13 @@ inline uint32_t bitfield_bit32_write(uint32_t bitfield,
   return bitfield_field32_write(bitfield, bitfield_bit32_to_field32(bit_index),
                                 value ? 0x1u : 0x0u);
 }
+
+inline uint32_t bitfield_field32_read(uint32_t bitfield,
+                                      bitfield_field32_t field) {
+  return (bitfield >> field.index) & field.mask;
+}
+
+inline bool bitfield_bit32_read(uint32_t bitfield, uint32_t bit_index) {
+  return bitfield_field32_read(bitfield,
+                               bitfield_bit32_to_field32(bit_index)) == 0x1u;
+}

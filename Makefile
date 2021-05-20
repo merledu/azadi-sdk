@@ -1,12 +1,21 @@
+export CORE
+export DRIVERS
+export INCLUDE
+export LIBS
+export FILEPATH
+export ROOT
+
+
 PROGRAM ?= plic_test
 
-FILEPATH = softwares/$(PROGRAM)
+ROOT := $(shell pwd)
+FILEPATH := $(ROOT)/softwares/$(PROGRAM)
 # paths
-BSP = bsp
-CORE = $(BSP)/core
-DRIVERS = $(BSP)/drivers
-INCLUDE = $(BSP)/include
-LIBS = $(BSP)/lib
+BSP := $(ROOT)/bsp
+CORE := $(BSP)/core
+DRIVERS := $(BSP)/drivers
+INCLUDE := $(BSP)/include
+LIBS := $(BSP)/lib
 
 RISCV=riscv32-unknown-elf-
 GCC=$(RISCV)gcc
@@ -20,12 +29,11 @@ LINK_FLAGS = -march=rv32i -mabi=ilp32 -static -nostdlib -nostartfiles -T $(CORE)
 
 .PHONY: build build-drivers compile-drivers build-include build-core upload
 
-upload : build
+upload : software
 	@echo "Uploading..."
 
 compile-drivers :
 	@mkdir -p generated
-	$(GCC) $(GCCFLAGS) -I$(INCLUDE) -I$(LIBS) -c $(CORE)/init.c -o generated/init.o -lgcc
 	$(GCC) $(GCCFLAGS) -I$(INCLUDE) -I$(LIBS) -c $(CORE)/trap.c -o generated/trap.o -lgcc
 	$(GCC) $(GCCFLAGS) -I$(INCLUDE) -I$(LIBS) -c $(DRIVERS)/gpio/gpio.c -o generated/gpio.o -lgcc
 	$(GCC) $(GCCFLAGS) -I$(INCLUDE) -I$(LIBS) -c $(DRIVERS)/plic/plic.c -o generated/plic.o -lgcc
@@ -61,7 +69,12 @@ test : clean
 	$(GCC) $(LINK_FLAGS) $(CORE)/start.S $(CORE)/timerh.S generated/timer.o generated/uart.o  generated/pwm.o $(FILEPATH)/output/$(PROGRAM).o -o $(FILEPATH)/output/$(PROGRAM).merl -lgcc
 	$(OBJDMP) $(OBJFLAGS) $(FILEPATH)/output/$(PROGRAM).merl > $(FILEPATH)/output/$(PROGRAM).dump 
 	$(RISCV)elf2hex --bit-width 32 --input $(FILEPATH)/output/$(PROGRAM).merl --output program.hex
-	
+
+.PHONY: software	
+software: clean
+	@echo "Build $(PROGRAM)"
+	cd ./softwares/$(PROGRAM) && $(MAKE) PROGRAM=$(PROGRAM) RISCV=$(RISCV)
+
 
 .PHONY: clean
 clean:

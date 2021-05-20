@@ -1,5 +1,6 @@
 #include "gpio.h"
 #include "trap.h"
+#include "timer.h"
 #include "platform.h"
 #include "plic.h"
 #include "plic-regs.h"
@@ -19,13 +20,23 @@ void handle_button_press(__attribute__((unused)) uint32_t num)
 
 int main(void){
 
-	gpio_intr_enable(3);
-	gpio_intr_type(3);
+	// gpio_intr_enable(3);
+	// gpio_intr_type(3);
 	
-	plic_init(13);
+	// plic_init(13);
 	
 
-	isr_table[13] = handle_button_press;
+
+	gpio_direct_write_enable(4);
+	gpio_direct_write(4, 1);
+	
+	delay(10);
+
+	gpio_direct_write_enable(5);
+	gpio_direct_write(5, 1);
+
+
+
 	
 
 	// Enable Global (PLIC) interrupts.
