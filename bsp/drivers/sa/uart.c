@@ -3,21 +3,78 @@
 // SPDX-License-Identifier: Apache-2.0
 
 #include "uart.h"
+#include "utils.h"
 #include "uart-regs.h"
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
 #include "platform.h"
 
-// static dif_uart_t uart0;
+void uart_init(uint32_t baudrate, uint32_t clk_freq) {
+
+
+  // Calculation formula: NCO = 16 * 2^nco_width * baud / fclk.
+
+  // Compute NCO register bit width
+  uint32_t nco_width = 0;
+
+  for (int i = 0; i < 32; i++) {
+    nco_width += (UART_CTRL_NCO_MASK >> i) & 1;
+  }
+
+  _Static_assert((UART_CTRL_NCO_MASK >> 28) == 0,
+                 "NCO bit width exceeds 28 bits.");
+
+  // NCO creates 16x of baudrate. So, in addition to the nco_width,
+  // 2^4 should be multiplied.
+  uint64_t nco =
+      ((uint64_t)baudrate << (nco_width + 4)) / clk_freq;
+  uint32_t nco_masked = nco & UART_CTRL_NCO_MASK;
+
+  // Requested baudrate is too high for the given clock frequency.
+  // if (nco != nco_masked) {
+  //   return kDifUartConfigBadNco;
+  // }
+
+  // Must be called before the first write to any of the UART registers.
+  uart_reset();
+
+  // Set baudrate, enable RX and TX, configure parity.
+  uint32_t reg = 0;
+  reg = bitfield_field32_write(reg, UART_CTRL_NCO_FIELD, nco_masked);
+  reg = bitfield_bit32_write(reg, UART_CTRL_TX_BIT, true);
+  reg = bitfield_bit32_write(reg, UART_CTRL_RX_BIT, true);
+  // if (config.parity_enable == kDifUartToggleEnabled) {
+  //   reg = bitfield_bit32_write(reg, UART_CTRL_PARITY_EN_BIT, true);
+  // }
+  // if (config.parity == kDifUartParityOdd) {
+  //   reg = bitfield_bit32_write(reg, UART_CTRL_PARITY_ODD_BIT, true);
+  // }
+  mem_write32(UART0_START, UART_CTRL_REG_OFFSET, reg);
+
+  // Disable interrupts.
+  mem_write32(UART0_START, UART_INTR_ENABLE_REG_OFFSET, 0u);
+
+}
+
+static void uart_reset() {
+  mem_write32(UART0_START, UART_CTRL_REG_OFFSET, 0u);
+
+  // Write to the relevant bits clears the FIFOs.
+  uint32_t reg = 0;
+  reg = bitfield_bit32_write(reg, UART_FIFO_CTRL_RXRST_BIT, true);
+  reg = bitfield_bit32_write(reg, UART_FIFO_CTRL_TXRST_BIT, true);
+  mem_write32(UART0_START, UART_FIFO_CTRL_REG_OFFSET, reg);
+
+  mem_write32(UART0_START, UART_OVRD_REG_OFFSET, 0u);
+  mem_write32(UART0_START, UART_TIMEOUT_CTRL_REG_OFFSET, 0u);
+  mem_write32(UART0_START, UART_INTR_ENABLE_REG_OFFSET, 0u);
+  // mem_write32(base, UART_INTR_STATE_REG_OFFSET,
+  //                     UART_INTR_STATE_MASK);
+}
+
 
 // void uart_init(unsigned int baud) {
-//   // Note that, due to a GCC bug, we cannot use the standard `(void) expr`
-//   // syntax to drop this value on the ground.
-//   // See https://gcc.gnu.org/bugzilla/show_bug.cgi?id=25509
-//   mmio_region_t base_addr = mmio_region_from_addr(UART0_START);
-//   if (dif_uart_init((dif_uart_params_t){.base_addr = base_addr}, &uart0)) {
-//   }
 //   if (dif_uart_configure(&uart0, (dif_uart_config_t){
 //                                      .baudrate = baud,
 //                                      .clk_freq_hz = 24 * 1000 * 1000,
@@ -26,43 +83,6 @@
 //                                  })) {
 //   }
 // }
-
-
-/************* MEMORY FUNCTIONS START **************/
-
-inline uint32_t bitfield_field32_read(uint32_t bitfield,
-                                      bitfield_field32_t field) {
-  return (bitfield >> field.index) & field.mask;
-}
-
-inline bitfield_field32_t bitfield_bit32_to_field32(
-    uint32_t bit_index) {
-  return (bitfield_field32_t){
-      .mask = 0x1, .index = bit_index,
-  };
-}
-
-inline uint32_t bitfield_field32_write(uint32_t bitfield,
-                                       bitfield_field32_t field,
-                                       uint32_t value) {
-  bitfield &= ~(field.mask << field.index);
-  bitfield |= (value & field.mask) << field.index;
-  return bitfield;
-}
-
-inline void mem_write32(uint32_t base, uint32_t offset,
-                                uint32_t value) {
-  ((volatile uint32_t *)base)[offset / sizeof(uint32_t)] = value;
-}
-
-inline uint32_t mem_read32(uint32_t base, ptrdiff_t offset) {
-  return ((volatile uint32_t *)base)[offset / sizeof(uint32_t)];
-}
-
-inline bool bitfield_bit32_read(uint32_t bitfield, uint32_t bit_index) {
-  return bitfield_field32_read(bitfield,
-                               bitfield_bit32_to_field32(bit_index)) == 0x1u;
-}
 
 /************* MEMORY FUNCTIONS END **************/
 

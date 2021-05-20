@@ -80,11 +80,6 @@ uint32_t gpio_read_all(){
 }
 
 uint32_t gpio_read_pin(int pin){
-  gpio_intr_enable(3);
-	gpio_intr_type(3);
-
-  plic_init(13);
-	
 
 	// isr_table[13] = gpio_read_interrupt;
   uint32_t state = mem_read32(GPIO_START, GPIO_DATA_IN_REG_OFFSET);
@@ -92,9 +87,6 @@ uint32_t gpio_read_pin(int pin){
   return state >> pin;
 }
 
-// static void gpio_read_interrupt(){
-// }
-
-// void gpio_direct_write_enable(long pin, int val){
-//     gpio_direct_bit_write(GPIO_DIRECT_OE_REG_OFFSET, pin, val);
-// }
+void gpio_direct_write_enable(long pin){
+    gpio_direct_bit_write(GPIO_DIRECT_OE_REG_OFFSET, pin, 1);
+}
