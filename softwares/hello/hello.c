@@ -1,8 +1,9 @@
 #include <stdio.h>
-#include "uart.h"
+#include "spi.h"
 int main()
 {   
-uart_rcv_char();
+Set_Speed(24);
+Spi_Write('w' , 0, 1);
 
 
 return 0;

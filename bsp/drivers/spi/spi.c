@@ -20,7 +20,7 @@ Select = (int *)(SPI_BASE_ADDRESS + SPI_SLAVE_SELECT_OFFSET);
 *Select = Select_Line;
 
 //cntrl register configuration
-int b = 50<<7;
+int b = 178<<7;
 int *cntrl;
 switch (Char_Len)
 {
@@ -42,13 +42,30 @@ cntrl = (int *)(SPI_BASE_ADDRESS + SPI_CNTRL_OFFSET);
 *cntrl = b + 32;
 }
 }
-void Spi_Read(int Select_Line)
+void Spi_Read(int Select_Line, int Char_Len)
 {
 //cntrl register configuration
-int b = 6432;
+int b = 306<<7;
 int *cntrl;
+switch (Char_Len)
+{
+case 1:
 cntrl = (int *)(SPI_BASE_ADDRESS + SPI_CNTRL_OFFSET);
-*cntrl = b;
+*cntrl = b + 8;
+break;
+case 2:
+
+cntrl = (int *)(SPI_BASE_ADDRESS + SPI_CNTRL_OFFSET);
+*cntrl = b + 16;
+break;
+case 3:
+cntrl = (int *)(SPI_BASE_ADDRESS + SPI_CNTRL_OFFSET);
+*cntrl = b + 24;
+break;
+default:
+cntrl = (int *)(SPI_BASE_ADDRESS + SPI_CNTRL_OFFSET);
+*cntrl = b + 32;
+}
 
 //Select Line
 int *Select;
