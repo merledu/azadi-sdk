@@ -39,6 +39,10 @@ void gpio_intr_enable(uint32_t index){
   gpio_direct_bit_write(GPIO_INTR_ENABLE_REG_OFFSET, index, 1 );
 }
 
+void gpio_intr_test(uint32_t index){
+  gpio_direct_bit_write(GPIO_INTR_TEST_REG_OFFSET, index, 1 );
+}
+
 void gpio_intr_type(uint32_t index){
   gpio_direct_bit_write(GPIO_INTR_CTRL_EN_LVLHIGH_REG_OFFSET, index, 1 );
 }

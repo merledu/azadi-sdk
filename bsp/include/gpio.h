@@ -98,5 +98,6 @@ void gpio_masked_write(int pin, int val);
 void gpio_intr_enable(uint32_t index);
 void gpio_intr_type(uint32_t index);
 void gpio_direct_write_all(uint32_t state);
+void gpio_intr_test(uint32_t index);
 uint32_t gpio_read_all();
 uint32_t gpio_read_pin(int pin);
