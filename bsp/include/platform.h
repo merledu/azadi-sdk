@@ -3,7 +3,7 @@
 #define PLATFORM_H
 
 /*
- *@brief RISCV - E CLASS SOC Memory mapping
+ *@brief RISCV - SOC Memory mapping
  */
 
 #define CLOCK_FREQUENCY 50000000
@@ -83,7 +83,7 @@
 #define PLIC_INTERRUPT_25  25 //uart 0
 #define PLIC_INTERRUPT_26  26 //uart 1
 #define PLIC_INTERRUPT_27  27 //uart 2
-#define PLIC_MAX_INTERRUPT_SRC 31
+#define PLIC_MAX_INTERRUPT_SRC 64
 
 
 /*!General Purpose Input Output */
