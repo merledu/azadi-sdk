@@ -28,7 +28,7 @@ while(1)
 	gpio_intr_type(25);
 	// gpio_intr_test(23);
 
-	plic_init(26, 0);
+	plic_init(26, 1);
 
 	isr_table[26] = handle_button_press;
 	
