@@ -17,7 +17,7 @@ DRIVERS := $(BSP)/drivers
 INCLUDE := $(BSP)/include
 LIBS := $(BSP)/lib
 
-RISCV=riscv32-unknown-elf-
+RISCV=riscv64-unknown-elf-
 GCC=$(RISCV)gcc
 OBJDMP=$(RISCV)objdump
 GCCFLAGS=-march=rv32i -mabi=ilp32 -mcmodel=medany -g
