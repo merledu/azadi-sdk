@@ -9,40 +9,11 @@
 
 
 plic_fptr_t isr_table[PLIC_MAX_INTERRUPT_SRC];
-// interrupt_data_t hart0_interrupt_matrix[PLIC_MAX_INTERRUPT_SRC];
 
-// static uint32_t index_to_mask(uint32_t index) { return 1u << index; }
-
-// inline void mem_write32(uint32_t base, uint32_t offset,
-//                                 uint32_t value) {
-//   ((volatile uint32_t *)base)[offset / sizeof(uint32_t)] = value;
-// }
-
-// inline uint32_t mem_read32(uint32_t base, ptrdiff_t offset) {
-//   return ((volatile uint32_t *)base)[offset / sizeof(uint32_t)];
-// }
-
-// inline bitfield_field32_t bitfield_bit32_to_field32(
-//     uint32_t bit_index) {
-//   return (bitfield_field32_t){
-//       .mask = 0x1, .index = bit_index,
-//   };
-// }
-
-// inline uint32_t bitfield_field32_write(uint32_t bitfield,
-//                                        bitfield_field32_t field,
-//                                        uint32_t value) {
-//   bitfield &= ~(field.mask << field.index);
-//   bitfield |= (value & field.mask) << field.index;
-//   return bitfield;
-// }
-
-// inline uint32_t bitfield_bit32_write(uint32_t bitfield,
-//                                      uint32_t bit_index,
-//                                      bool value) {
-//   return bitfield_field32_write(bitfield, bitfield_bit32_to_field32(bit_index),
-//                                 value ? 0x1u : 0x0u);
-// }
+typedef struct plic_reg_info {
+  ptrdiff_t offset;
+  uint32_t bit_index;
+} plic_reg_info_t;
 
 // Helper function to calculate priority register
 static ptrdiff_t plic_priority_reg_offset(uint32_t irq) {
@@ -50,10 +21,10 @@ static ptrdiff_t plic_priority_reg_offset(uint32_t irq) {
   return RV_PLIC_PRIO0_REG_OFFSET + offset;
 }
 
-typedef struct plic_reg_info {
-  ptrdiff_t offset;
-  uint32_t bit_index;
-} plic_reg_info_t;
+static ptrdiff_t plic_irq_enable_base_for_target(uint32_t target) {
+  ptrdiff_t range = RV_PLIC_IE0_MULTIREG_COUNT * sizeof(uint32_t);
+  return RV_PLIC_IE0_0_REG_OFFSET + (range * target);
+}
 
 static ptrdiff_t plic_offset_from_reg0(uint32_t irq) {
   uint8_t register_index = irq / RV_PLIC_PARAM_REG_WIDTH;
@@ -64,10 +35,22 @@ static uint8_t plic_irq_bit_index(uint32_t irq) {
   return irq % RV_PLIC_PARAM_REG_WIDTH;
 }
 
-static plic_reg_info_t plic_irq_enable_reg_info(uint32_t irq) {
+/**
+ * Get a target and an IRQ source specific Interrupt Enable register info.
+ */
+static plic_reg_info_t plic_irq_enable_reg_info(uint32_t irq,
+                                                uint32_t target) {
   ptrdiff_t offset = plic_offset_from_reg0(irq);
   return (plic_reg_info_t){
-      .offset = RV_PLIC_IE0_REG_OFFSET + offset,
+      .offset = plic_irq_enable_base_for_target(target) + offset,
+      .bit_index = plic_irq_bit_index(irq),
+  };
+}
+
+static plic_reg_info_t plic_irq_trigger_type_reg_info(uint32_t irq) {
+  ptrdiff_t offset = plic_offset_from_reg0(irq);
+  return (plic_reg_info_t){
+      .offset = RV_PLIC_LE_0_REG_OFFSET + offset,
       .bit_index = plic_irq_bit_index(irq),
   };
 }
@@ -105,28 +88,35 @@ void plic_set_threshold(uint32_t threshold) {
 }
 
 void plic_enable_interrupt(uint32_t irq) {
-  const uint32_t mask = index_to_mask(irq % 32);
-  mem_write32(PLIC_BASE_ADDRESS, RV_PLIC_IE0_REG_OFFSET, mask);
+  const uint32_t mask = index_to_mask(irq % 64);
+  mem_write32(PLIC_BASE_ADDRESS, RV_PLIC_IE0_0_REG_OFFSET, mask);
 
 }
 
 void plic_set_trigger_type(uint32_t index) {
-  mem_write32(PLIC_BASE_ADDRESS, RV_PLIC_LE_REG_OFFSET, index);
+  mem_write32(PLIC_BASE_ADDRESS, RV_PLIC_LE_0_REG_OFFSET, index);
 }
 
 
-// void plic_irq_set_enabled(uint32_t irq, uint8_t value) {
+void plic_irq_set_enabled(uint32_t irq, uint8_t state, uint32_t target) {
 
-//   plic_reg_info_t reg_info = plic_irq_enable_reg_info(irq);
-//   uint32_t reg;
+  plic_reg_info_t reg_info = plic_irq_enable_reg_info(irq, target);
 
-//   // uint32_t reg = mem_read32(PLIC_BASE_ADDRESS, RV_PLIC_IE0_REG_OFFSET);
+  uint32_t reg = mem_read32(PLIC_BASE_ADDRESS, reg_info.offset);
+  reg = bitfield_bit32_write(reg, reg_info.bit_index, state);
+  mem_write32(PLIC_BASE_ADDRESS, reg_info.offset, reg);
+}
 
-//   uint8_t bit_index = irq % RV_PLIC_PARAM_REG_WIDTH;
-// //   reg = bitfield_bit32_write(reg, reg_info.bit_index, state);
-// //   reg = state << irq; //need to fix
-//   mem_write32(PLIC_BASE_ADDRESS, RV_PLIC_IE0_REG_OFFSET, value);
-// }
+void plic_irq_set_trigger(uint32_t irq, uint32_t trigger) {
+
+  bool flag = false;
+  plic_reg_info_t reg_info = plic_irq_trigger_type_reg_info(irq);
+
+  uint32_t reg = mem_read32(PLIC_BASE_ADDRESS, reg_info.offset);
+  reg = bitfield_bit32_write(reg, reg_info.bit_index, flag);
+  mem_write32(PLIC_BASE_ADDRESS, reg_info.offset, reg);
+
+}
 
 uint32_t plic_irq_claim() {
 
@@ -146,10 +136,10 @@ void plic_irq_complete(const uint32_t complete_data) {
 
 
 
-void plic_init(int p_id)
+void plic_init(int p_id, uint32_t t_id)
 {
 	plic_set_threshold(2);
 	plic_set_priority(p_id, 3);
-	plic_enable_interrupt(p_id);
-	plic_set_trigger_type(0);
+	plic_irq_set_enabled(p_id, true, t_id);
+	plic_irq_set_trigger(p_id, 0);
 }
