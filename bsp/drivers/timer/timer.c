@@ -16,9 +16,6 @@ void mach_timer_handler(__attribute__((unused)) uintptr_t int_id, __attribute__(
         "sw x0 , 0x114(s0);"
         "sw x7 , 0x118(s0);"
         "sw x0 , 0x0(s0);"
-        
-        "csrrw x0 , 0x300, x5;"
-        "csrrw x0 , 0x304, x5;"
     );
 }
 
@@ -39,8 +36,8 @@ __asm__ __volatile__(
 "li x5 , 0x80;"
 "li x6 , 8;"
 
-"csrrw x0 , 0x300, x6;"
-"csrrw x0 , 0x304, x5;"
+"csrrs x0 , 0x300, x6;"
+"csrrs x0 , 0x304, x5;"
 
 
 
