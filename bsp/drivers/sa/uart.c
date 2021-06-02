@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0, see LICENSE for details.
 // SPDX-License-Identifier: Apache-2.0
 
-#include "uart.h"
+#include "uart-sa.h"
 #include "utils.h"
 #include "uart-regs.h"
 #include <stdbool.h>
