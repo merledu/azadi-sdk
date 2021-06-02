@@ -1,5 +1,5 @@
+#include <stdio.h>
 #include "uart.h"
-
 
 int main()
 {    
@@ -8,8 +8,7 @@ int main()
    // uart_send_str(str);
 //uart_init(9600, 16000000);
 //Uart_Send_Str(str);
-Set_Baud_Rate(9600);
-Uart_Tx_Rdy(0x77);
 
+uart_init(9600, 16000000);
     return 0;
 }

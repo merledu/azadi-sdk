@@ -25,7 +25,7 @@ void delay(int a)
 
 int *time_cmp;
 time_cmp = (int*) (TIMER_BASE_ADDRESS + TIMER_CMP_OFFSET);
-*time_cmp = a;
+*time_cmp = a*10000;
 
 __asm__ __volatile__(
 "li s0 , 0x40000000;"
