@@ -43,8 +43,20 @@ void gpio_intr_test(uint32_t index){
   gpio_direct_bit_write(GPIO_INTR_TEST_REG_OFFSET, index, 1 );
 }
 
-void gpio_intr_type(uint32_t index){
-  gpio_direct_bit_write(GPIO_INTR_CTRL_EN_LVLHIGH_REG_OFFSET, index, 1 );
+void gpio_intr_type(uint32_t index, uint32_t type){
+  uint32_t offset = 0;
+  if(type == 0)
+    offset = GPIO_INTR_CTRL_EN_RISING_REG_OFFSET;
+  else if(type == 1)
+    offset = GPIO_INTR_CTRL_EN_FALLING_REG_OFFSET;
+  else if(type == 2)
+    offset = GPIO_INTR_CTRL_EN_LVLHIGH_REG_OFFSET;
+  else if(type == 3)
+    offset = GPIO_INTR_CTRL_EN_LVLLOW_REG_OFFSET;
+  else 
+    offset = 0;
+
+  gpio_direct_bit_write(offset, index, 1 );
 }
 
 static void gpio_masked_bit_write(uint32_t reg_lower_offset,

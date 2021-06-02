@@ -25,10 +25,10 @@ int main(void){
 while(1)
 {
 	gpio_intr_enable(25);
-	gpio_intr_type(25);
+	gpio_intr_type(25, 2);
 	// gpio_intr_test(23);
 
-	plic_init(26, 1);
+	plic_init(26, 0);
 
 	isr_table[26] = handle_button_press;
 	
