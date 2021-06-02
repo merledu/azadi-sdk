@@ -7,7 +7,7 @@ void Set_Speed(int Divider)
   div = (int *)(SPI_BASE_ADDRESS + SPI_DIVIDER_OFFSET );
   *div = Divider;
 }
-void Spi_Write(int a , int Select_Line, int Char_Len)
+void Spi_Write(unsigned char a , int Select_Line, int Char_Len)
 {
 //Write Data
 int *wd;
@@ -75,5 +75,6 @@ Select = (int *)(SPI_BASE_ADDRESS + SPI_SLAVE_SELECT_OFFSET);
 __asm__ __volatile__(
 "WFI;"
 );
-
 }
+
+
