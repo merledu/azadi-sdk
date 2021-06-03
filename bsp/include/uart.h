@@ -9,3 +9,5 @@
 void Set_Baud_Rate(unsigned int baud_rate);
 void Uart_Tx_Rdy(int val);
 int Uart_Rx_Rdy();
+
+

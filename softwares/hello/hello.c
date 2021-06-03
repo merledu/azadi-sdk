@@ -1,6 +1,4 @@
 #include "uart.h"
-
-
 int main()
 {    
  //   char *str = "waleed";
@@ -9,7 +7,7 @@ int main()
 //uart_init(9600, 16000000);
 //Uart_Send_Str(str);
 Set_Baud_Rate(9600);
-Uart_Tx_Rdy(0x77);
+Uart_Tx_Rdy('w');
 
     return 0;
 }

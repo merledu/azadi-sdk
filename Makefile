@@ -5,7 +5,7 @@ export LIBS
 export FILEPATH
 export ROOT
 
-PROGRAM ?= hello
+PROGRAM ?= 
 
  
 
