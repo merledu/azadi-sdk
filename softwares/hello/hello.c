@@ -1,13 +1,15 @@
 #include "uart.h"
 int main()
 {    
- //   char *str = "waleed";
-   // uart_init(9600, 10000000);
-   // uart_send_str(str);
+  char *str = "waleed";
+  uart_send_str(str);
+  //uart_send_char('w');
+  uart_init(9600, 9000000);
+
 //uart_init(9600, 16000000);
 //Uart_Send_Str(str);
-Set_Baud_Rate(9600);
-Uart_Tx_Rdy('w');
+//Set_Baud_Rate(9600);
+//Uart_Tx_Rdy('w');
 
     return 0;
 }
