@@ -1,33 +1,36 @@
 #include "gpio.h"
 #include "trap.h"
-#include "timer.h"
-#include "platform.h"
 #include "plic.h"
-#include "plic-regs.h"
+#include "platform.h"
 
 
 void handle_button_press(__attribute__((unused)) uint32_t num);
 
 void handle_button_press(__attribute__((unused)) uint32_t num)
 {
-  	uint32_t state = gpio_read_pin(3);
+  	uint32_t state = gpio_read_pin(25);
 	
 	if(state == 1){
 		gpio_direct_write_enable(10);
 		gpio_direct_write(10, 1);
-	} 
+	} else {
+		gpio_direct_write_enable(13);
+		gpio_direct_write(13, 1);
+	}
 }
 
 
 
 int main(void){
+while(1)
+{
+	gpio_intr_enable(25);
+	gpio_intr_type(25, 2);
+	// gpio_intr_test(23);
 
-	gpio_intr_enable(3);
-	gpio_intr_type(3);
-	
-	plic_init(13);
+	plic_init(26, 0);
 
-	isr_table[13] = handle_button_press;
+	isr_table[26] = handle_button_press;
 	
 
 

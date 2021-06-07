@@ -11,8 +11,7 @@
 #define _RV_PLIC_REG_DEFS_
 
 #ifdef __cplusplus
-extern "C"
-{
+extern "C" {
 #endif
 // Number of interrupt sources
 #define RV_PLIC_PARAM_NUM_SRC 64
@@ -434,7 +433,7 @@ extern "C"
 #define RV_PLIC_IE0_MULTIREG_COUNT 2
 
 // Interrupt Enable for Target 0
-#define RV_PLIC_IE0_0_REG_OFFSET 0xa0
+#define RV_PLIC_IE0_0_REG_OFFSET 0xc0
 #define RV_PLIC_IE0_0_E_0_BIT 0
 #define RV_PLIC_IE0_0_E_1_BIT 1
 #define RV_PLIC_IE0_0_E_2_BIT 2
@@ -469,7 +468,7 @@ extern "C"
 #define RV_PLIC_IE0_0_E_31_BIT 31
 
 // Interrupt Enable for Target 0
-#define RV_PLIC_IE0_1_REG_OFFSET 0xa4
+#define RV_PLIC_IE0_1_REG_OFFSET 0xc4
 #define RV_PLIC_IE0_1_E_32_BIT 0
 #define RV_PLIC_IE0_1_E_33_BIT 1
 #define RV_PLIC_IE0_1_E_34_BIT 2
@@ -504,25 +503,25 @@ extern "C"
 #define RV_PLIC_IE0_1_E_63_BIT 31
 
 // Threshold of priority for Target 0
-#define RV_PLIC_THRESHOLD0_REG_OFFSET 0xa8
+#define RV_PLIC_THRESHOLD0_REG_OFFSET 0xc8
 #define RV_PLIC_THRESHOLD0_THRESHOLD0_MASK 0x3
 #define RV_PLIC_THRESHOLD0_THRESHOLD0_OFFSET 0
 #define RV_PLIC_THRESHOLD0_THRESHOLD0_FIELD \
-  ((bitfield_field32_t){.mask = RV_PLIC_THRESHOLD0_THRESHOLD0_MASK, .index = RV_PLIC_THRESHOLD0_THRESHOLD0_OFFSET})
+  ((bitfield_field32_t) { .mask = RV_PLIC_THRESHOLD0_THRESHOLD0_MASK, .index = RV_PLIC_THRESHOLD0_THRESHOLD0_OFFSET })
 
 // Claim interrupt by read, complete interrupt by write for Target 0.
-#define RV_PLIC_CC0_REG_OFFSET 0xac
+#define RV_PLIC_CC0_REG_OFFSET 0xcc
 #define RV_PLIC_CC0_CC0_MASK 0xff
 #define RV_PLIC_CC0_CC0_OFFSET 0
 #define RV_PLIC_CC0_CC0_FIELD \
-  ((bitfield_field32_t){.mask = RV_PLIC_CC0_CC0_MASK, .index = RV_PLIC_CC0_CC0_OFFSET})
+  ((bitfield_field32_t) { .mask = RV_PLIC_CC0_CC0_MASK, .index = RV_PLIC_CC0_CC0_OFFSET })
 
 // msip for Hart 0.
-#define RV_PLIC_MSIP0_REG_OFFSET 0xb0
+#define RV_PLIC_MSIP0_REG_OFFSET 0xd0
 #define RV_PLIC_MSIP0_MSIP0_BIT 0
 
 #ifdef __cplusplus
-} // extern "C"
+}  // extern "C"
 #endif
-#endif // _RV_PLIC_REG_DEFS_ \
-       // End generated register defines for RV_PLIC
+#endif  // _RV_PLIC_REG_DEFS_
+// End generated register defines for RV_PLIC
