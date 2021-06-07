@@ -1,9 +1,7 @@
 #include "gpio.h"
 #include "trap.h"
-#include "timer.h"
-#include "platform.h"
 #include "plic.h"
-#include "plic-regs.h"
+#include "platform.h"
 
 
 void handle_button_press(__attribute__((unused)) uint32_t num);
@@ -27,7 +25,7 @@ int main(void){
 while(1)
 {
 	gpio_intr_enable(25);
-	gpio_intr_type(25);
+	gpio_intr_type(25, 2);
 	// gpio_intr_test(23);
 
 	plic_init(26, 0);

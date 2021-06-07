@@ -109,7 +109,7 @@ void plic_irq_set_enabled(uint32_t irq, uint8_t state, uint32_t target) {
 
 void plic_irq_set_trigger(uint32_t irq, uint32_t trigger) {
 
-  bool flag = false;
+  bool flag = trigger == 0 ? false : true;
   plic_reg_info_t reg_info = plic_irq_trigger_type_reg_info(irq);
 
   uint32_t reg = mem_read32(PLIC_BASE_ADDRESS, reg_info.offset);
@@ -140,6 +140,6 @@ void plic_init(int p_id, uint32_t t_id)
 {
 	plic_set_threshold(2);
 	plic_set_priority(p_id, 3);
-	plic_irq_set_enabled(p_id, true, t_id);
-	plic_irq_set_trigger(p_id, 0);
+	plic_irq_set_enabled(p_id, true, 0);
+	plic_irq_set_trigger(p_id, t_id);
 }
