@@ -9,7 +9,7 @@ def checkPath(path):
         raise Exception("No such file: %s" % path)
 
 
-uart = serial.Serial("/dev/ttyS4", baudrate=9600, parity=serial.PARITY_NONE,
+uart = serial.Serial("/dev/ttyUSB1", baudrate=9600, parity=serial.PARITY_NONE,
                      stopbits=serial.STOPBITS_ONE, bytesize=serial.EIGHTBITS, timeout=1)
 counter = 0
 
