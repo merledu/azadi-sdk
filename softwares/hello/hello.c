@@ -1,6 +1,7 @@
 #include "uart.h"
 #include "utils.h"
 #include "gpio.h"
+#include "timer.h"
 int main()
 {    
  // char *str = "waleed";
@@ -40,9 +41,9 @@ else{
 */
 while(1)
 {
-uart_init(9600 , 9000000);
+  uart_init(9600 , 9000000);
 uint32_t rx = uart_polled_data();
-if (rx > 1){
+if (rx == -1){
   gpio_direct_write(6, 1);
   gpio_direct_write_enable(6);
 
@@ -51,7 +52,12 @@ if (rx > 1){
 else{
     gpio_direct_write(7, 1);
   gpio_direct_write_enable(7);
+}
+}
 
-}
-}
+//while(1)
+//{
+//  uart_send_char('w');
+//  uart_init(9600 , 9000000);
+//}
 }
