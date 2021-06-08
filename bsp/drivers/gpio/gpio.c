@@ -6,16 +6,6 @@
 #include <stddef.h>
 #include "utils.h"
 
-// static uint32_t index_to_mask(uint32_t index) { return 1u << index; }
-
-// inline void mem_write32(uint32_t base, uint32_t offset,
-//                                 uint32_t value) {
-//   ((volatile uint32_t *)base)[offset / sizeof(uint32_t)] = value;
-// }
-
-// inline uint32_t mem_read32(uint32_t base, ptrdiff_t offset) {
-//   return ((volatile uint32_t *)base)[offset / sizeof(uint32_t)];
-// }
 
 void gpio_direct_bit_write(uint32_t offset, uint32_t index, bool val) {
   const uint32_t mask = index_to_mask(index % 32);

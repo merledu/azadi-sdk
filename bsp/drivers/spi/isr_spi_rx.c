@@ -3,9 +3,9 @@
 void Isr_Rx_Spi()
 {
 __asm__ __volatile__ (
-li s0 , 0x40080000
+"li s0 , 0x40080000;"
 // reading value from the spi register
-lw x5 , 0x0(s0)
+"lw x5 , 0x0(s0);"
 );
 
 //clearing rx register

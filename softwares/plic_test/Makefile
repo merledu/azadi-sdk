@@ -3,7 +3,7 @@ RISCV ?= riscv32-unknown-elf-
 
 GCC=$(RISCV)gcc
 OBJDMP=$(RISCV)objdump
-GCCFLAGS=-march=rv32imfd -mabi=ilp32d -mcmodel=medany -g
+GCCFLAGS=-march=rv32imfd -mabi=ilp32d -mcmodel=medany -g -O3
 OBJFLAGS=--disassemble-all --disassemble-zeroes 
 # --section=.text --section=.text.startup --section=.text.init --section=.data
 LINK_FLAGS = -march=rv32imfd -mabi=ilp32d -static -nostdlib -nostartfiles -T $(CORE)/link.ld
