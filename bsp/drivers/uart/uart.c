@@ -8,6 +8,7 @@ and receive over UART interface.
 #include "uart.h"
 #include "utils.h"
 #include <math.h>
+#include <stdint.h>
 
 void uart_init(unsigned int baud_rate , unsigned int clock_frequency){
 	//computing formula : baud_rate = clock_frequency/baud_rate
