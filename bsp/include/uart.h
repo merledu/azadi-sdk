@@ -1,11 +1,12 @@
 #define UART_BASE_ADDRESS 0x40060000
-#define Cntrl_Register_Offset 0xc
-#define Clock_Frequency 16000000
-#define UART_WRITE_DATA 0x18
-#define UART_INTR_STATE_REG 0x0
-#define UART_INTR_ENABLE_REG 0x4
-#define UART_INTR_STATE_RX_BREAK_ERR_MASK 0x00000001  
+#define UART_CNTRL_REGISTER_OFFSET 0x0
+#define UART_WDATA_REGISTER_OFFSET 0x4
+#define UART_RDATA_REGISTER_OFFSET 0X8
 
-void Set_Baud_Rate(unsigned int baud_rate);
-void Uart_Tx_Rdy(int val);
-int Uart_Rx_Rdy();
+
+void uart_init(unsigned int baud_rate , unsigned int clock_frequency);
+void uart_send_char(char val );
+void uart_send_str(char *str);
+int uart_polled_data();
+
+
