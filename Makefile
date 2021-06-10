@@ -39,6 +39,7 @@ compile-drivers :
 	$(GCC) $(GCCFLAGS) -I$(INCLUDE) -I$(LIBS) -c $(DRIVERS)/gpio/gpio.c -o generated/gpio.o -lgcc
 	$(GCC) $(GCCFLAGS) -I$(INCLUDE) -I$(LIBS) -c $(DRIVERS)/plic/plic.c -o generated/plic.o -lgcc
 	$(GCC) $(GCCFLAGS) -I$(INCLUDE) -I$(LIBS) -c $(DRIVERS)/uart/uart.c -o generated/uart.o -lgcc
+	$(GCC) $(GCCFLAGS) -I$(INCLUDE) -I$(LIBS) -c $(DRIVERS)/timer/timer.c -o generated/timer.o -lgcc
 	$(GCC) $(GCCFLAGS) -I$(INCLUDE) -I$(LIBS) -c $(LIBS)/mmio.c -o generated/mmio.o -lgcc
 	$(GCC) $(GCCFLAGS) -I$(INCLUDE) -I$(LIBS) -c $(LIBS)/bitfield.c -o generated/bitfield.o -lgcc
 	
@@ -47,13 +48,14 @@ compile-drivers :
 	$(GCC) $(GCCFLAGS) -I$(INCLUDE) -c $(CORE)/trap.c -o generated/trap.o -lgcc
 	$(GCC) $(GCCFLAGS) -I$(INCLUDE) -I$(LIBS) -c $(DRIVERS)/gpio/gpio.c -o generated/gpio.o -lgcc
 	$(GCC) $(GCCFLAGS) -I$(INCLUDE) -I$(LIBS) -c $(DRIVERS)/uart/uart.c -o generated/uart.o -lgcc
-	$(GCC) $(GCCFLAGS) -I$(INCLUDE) -c $(DRIVERS)/timer/timer.c -o generated/timer.o -lgcc
+	$(GCC) $(GCCFLAGS) -I$(INCLUDE) -I$(LIBS) -c $(DRIVERS)/timer/timer.c -o generated/timer.o -lgcc
+#	$(GCC) $(GCCFLAGS) -I$(INCLUDE) -c $(DRIVERS)/timer/timer.c -o generated/timer.o -lgcc
 	$(GCC) $(GCCFLAGS) -I$(INCLUDE) -c $(DRIVERS)/pwm/pwm.c -o generated/pwm.o -lgcc
 	$(GCC) $(GCCFLAGS) -I$(INCLUDE) -c $(DRIVERS)/spi/spi.c -o generated/spi.o -lgcc
 #	$(GCC) $(GCCFLAGS) -I$(INCLUDE) -c $(DRIVERS)/uart/uart.c -o generated/uart.o -lgcc
 	$(GCC) $(GCCFLAGS) -I$(INCLUDE) -I$(LIBS) -c $(DRIVERS)/plic/plic.c -o generated/plic.o -lgcc
 	$(GCC) $(GCCFLAGS) -I$(INCLUDE) -I$(LIBS) -c $(DRIVERS)/uart/uart.c -o generated/uart.o -lgcc		
-
+	$(GCC) $(GCCFLAGS) -I$(INCLUDE) -I$(LIBS) -c $(DRIVERS)/timer/timer.c -o generated/timer.o -lgcc
 build-drivers : compile-drivers
 	$(RISCV)ar rcs generated/drivers.a generated/gpio.o generated/plic.o generated/timer.o generated/pwm.o generated/uart.o generated/spi.o
 
