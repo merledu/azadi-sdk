@@ -8,6 +8,7 @@ and receive over UART interface.
 #include "uart.h"
 #include "utils.h"
 #include <math.h>
+#include "timer.h"
 
 void uart_init(unsigned int baud_rate , unsigned int clock_frequency){
 	//computing formula : baud_rate = clock_frequency/baud_rate
@@ -25,7 +26,9 @@ void uart_send_char(char val ){
 void uart_send_str(char *str){
 	//transmitting string
 	while(*str != '\0'){
+
 		uart_send_char(*str++);
+		delay(500);
 	}
 }
 
@@ -33,9 +36,6 @@ int uart_polled_data(){
 	//polling uart
     mem_write32(UART_BASE_ADDRESS, UART_RX_ENABLE_REGISTER_OFFSET, 1);
 	uint32_t rcv_status = mem_read32(UART_BASE_ADDRESS, UART_RX_STATUS_REGISTER_OFFSET);
-	// uint32_t rcv = rcv_status >> 2;
-	// rcv = rcv_status << 31;
-	// rcv = rcv_status >> 31;
 
 	if(rcv_status == 1){
 		uint32_t ret;

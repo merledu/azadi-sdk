@@ -3,4 +3,4 @@
 #define PWM_DUTY_CYCLE_OFFSET2 0x1c
 
 
-void PWM_DUTYCYCLE(int channel , int a);
+void PWM_DUTYCYCLE(int channel , int duty_cycle);
