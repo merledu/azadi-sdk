@@ -23,6 +23,7 @@ void uart_send_char(char val ){
 
 }
 
+
 void uart_send_str(char *str){
 	//transmitting string
 	while(*str != '\0'){
@@ -37,13 +38,20 @@ int uart_polled_data(){
     mem_write32(UART_BASE_ADDRESS, UART_RX_ENABLE_REGISTER_OFFSET, 1);
 	uint32_t rcv_status = mem_read32(UART_BASE_ADDRESS, UART_RX_STATUS_REGISTER_OFFSET);
 
-	if(rcv_status == 1){
-		uint32_t ret;
-		return ret = mem_read32(UART_BASE_ADDRESS, UART_RDATA_REGISTER_OFFSET);
+	//if(rcv_status == 1){
+	//	return mem_read32(UART_BASE_ADDRESS, UART_RDATA_REGISTER_OFFSET);
+	//}
+	//else{
+	//	return -1;
+	//}
+	while(rcv_status != 1){
+		return mem_read32(UART_BASE_ADDRESS, UART_RDATA_REGISTER_OFFSET);
 	}
-	else{
-		return -1;
-	}
+	mem_write32(UART_BASE_ADDRESS, UART_RX_SC_REGISTER_OFFSET, 0);
 }
+
+
+
+
 
 

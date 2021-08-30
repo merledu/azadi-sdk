@@ -1,5 +1,5 @@
-#include "timer.h"
-#include "pwm.h"
+#include "uart.h"
+#include "utils.h"
 #include <stdio.h>
 int main() 
 { 
@@ -7,8 +7,8 @@ int main()
 //  int angle =0;
 //  for(angle = 0; angle < 180; angle += 1) 	 // command to move from 0 degrees to 180 degrees 
 //  {                                  
-    PWM_DUTYCYCLE(2 , 8000);   
-    PWM_DUTYCYCLE(1 , 8000);           	 //command to rotate the servo to the specified angle
+    //PWM_DUTYCYCLE(2 , 8000);   
+    //PWM_DUTYCYCLE(1 , 8000);           	 //command to rotate the servo to the specified angle
 //    delay(15);                       
 //  } 
  
@@ -19,6 +19,13 @@ int main()
  //   PWM_DUTYCYCLE(2 , angle);
 //    delay(5);                       
 //  } 
+while(1)
+{
+uart_init(9600 , 8000000);
+char a = uart_polled_data();
+uart_send_char(a);
 
+
+}
  //   delay(1000);
 }
