@@ -156,4 +156,14 @@ void attach_interrupt(int int_id, void (*isr), int gpio_trigger_id){
   gpio_intr_type(int_id, gpio_trigger_id);
 
   isr_table[int_id] = isr;
+
+  // Enable Global (PLIC) interrupts.
+	asm volatile("li      t0, 8\t\n"
+		     "csrrs   zero, mstatus, t0\t\n"
+		    );
+
+	// Enable Local (PLIC) interrupts.
+	asm volatile("li      t0, 0x800\t\n"
+		     "csrrs   zero, mie, t0\t\n"
+		    );
 }
