@@ -5,6 +5,8 @@
 **/output
 *.hex
 
+.vscode/*
+
 # Object files
 *.o
 *.ko
