@@ -16,7 +16,7 @@ BSP := $(ROOT)/bsp
 CORE := $(BSP)/core
 DRIVERS := $(BSP)/drivers
 INCLUDE := $(BSP)/include
-LIBS := $(BSP)/lib
+LIBS := $(BSP)/libs
 
 RISCV=riscv32-unknown-elf-
 GCC=$(RISCV)gcc
@@ -61,7 +61,7 @@ build : clean build-drivers
 	@echo "building $(FILEPATH)/$(PROGRAM).c"
 	@mkdir $(FILEPATH)/output
 	$(GCC) $(GCCFLAGS) -I$(INCLUDE) -I$(LIBS) -I$(DRIVERS)/timer -I$(DRIVERS)/plic -I$(DRIVERS)/uart -I$(DRIVERS)/gpio -I$(DRIVERS)/spi -c $(FILEPATH)/$(PROGRAM).c -o $(FILEPATH)/output/$(PROGRAM).o -lgcc
-	$(GCC) $(LINK_FLAGS) $(CORE)/start.S $(CORE)/trap.S generated/timer.o generated/uart.o generated/utils.o generated/trap.o generated/plic.o generated/gpio.o $(FILEPATH)/output/$(PROGRAM).o -o $(FILEPATH)/output/$(PROGRAM).merl -lgcc
+	$(GCC) $(LINK_FLAGS) $(CORE)/start.S $(CORE)/trap_entry.S generated/timer.o generated/uart.o generated/utils.o generated/trap.o generated/plic.o generated/gpio.o $(FILEPATH)/output/$(PROGRAM).o -o $(FILEPATH)/output/$(PROGRAM).merl -lgcc
 	$(OBJDMP) $(OBJFLAGS) $(FILEPATH)/output/$(PROGRAM).merl > $(FILEPATH)/output/$(PROGRAM).dump 
 	$(RISCV)elf2hex --bit-width 32 --input $(FILEPATH)/output/$(PROGRAM).merl --output program.hex
 

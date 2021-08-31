@@ -524,5 +524,5 @@ extern "C"
 #ifdef __cplusplus
 } // extern "C"
 #endif
-#endif // _RV_PLIC_REG_DEFS_ \
+#endif // _RV_PLIC_REG_DEFS_
        // End generated register defines for RV_PLIC
