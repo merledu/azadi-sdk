@@ -76,6 +76,7 @@ void plic_irq_complete(const uint32_t complete_data);
 // void plic_irq_set_enabled(uint32_t irq, bool state);
 void plic_irq_set_enabled(uint32_t irq, uint8_t state, uint32_t target);
 void plic_irq_set_trigger(uint32_t irq, uint32_t trigger);
+void attach_interrupt(int int_id, void (*isr), int gpio_trigger_id);
 
 // typedef struct bitfield_field32 {
 //   /** The field mask. Usually all ones. */

@@ -96,3 +96,7 @@ uint32_t gpio_read_pin(int pin){
 void gpio_direct_write_enable(long pin){
     gpio_direct_bit_write(GPIO_DIRECT_OE_REG_OFFSET, pin, 1);
 }
+
+void gpio_direct_write_all_enable(uint32_t state){
+    mem_write32(GPIO_START, GPIO_DIRECT_OE_REG_OFFSET, state);
+}
