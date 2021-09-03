@@ -2,23 +2,16 @@
 #include "trap.h"
 #include "plic.h"
 #include "platform.h"
+#include "uart.h"
 
+ void handle_button_press(__attribute__((unused)) uint32_t num);
 
-void handle_button_press(__attribute__((unused)) uint32_t num);
-
-void handle_button_press(__attribute__((unused)) uint32_t num)
-{
-  	uint32_t state = gpio_read_pin(25);
-	
-	if(state == 1){
-		gpio_direct_write_enable(10);
-		gpio_direct_write(10, 1);
-	} else {
-		gpio_direct_write_enable(13);
-		gpio_direct_write(13, 1);
-	}
-}
-
+ void handle_button_press(__attribute__((unused)) uint32_t num)
+ {
+  int a = 0;
+    	mem_write32(UART_BASE_ADDRESS, UART_TX_ENABLE_REGISTER_OFFSET, a);
+        mem_write32(UART_BASE_ADDRESS, UART_WDATA_REGISTER_OFFSET, a);
+ }
 
 
 int main(void){
@@ -28,11 +21,12 @@ while(1)
 	gpio_intr_type(25, 2);
 	// gpio_intr_test(23);
 
-	plic_init(26, 0);
+	//plic_init(26, 0);
 
-	isr_table[26] = handle_button_press;
+	//isr_table[26] = handle_button_press;
 	
-
+	plic_init(33,0);
+	isr_table[33] = handle_button_press;
 
 	// gpio_direct_write_enable(5);
 	// gpio_direct_write(5, 1);
