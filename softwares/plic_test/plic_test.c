@@ -8,14 +8,14 @@ void handle_button_press(__attribute__((unused)) uint32_t num);
 
 void handle_button_press(__attribute__((unused)) uint32_t num)
 {
-  	uint32_t state = gpio_read_pin(31);
+  	uint32_t state = gpio_read_pin(1);
 	
 	if(state == 1){
-		gpio_direct_write_enable(10);
-		gpio_direct_write(10, 1);
+		gpio_direct_write_enable(5);
+		gpio_direct_write(5, 1);
 	} else {
-		gpio_direct_write_enable(13);
-		gpio_direct_write(13, 1);
+		gpio_direct_write_enable(7);
+		gpio_direct_write(7, 1);
 	}
 }
 
@@ -24,13 +24,13 @@ void handle_button_press(__attribute__((unused)) uint32_t num)
 int main(void){
 while(1)
 {
-	gpio_intr_enable(31);
-	gpio_intr_type(31, 2);
+	gpio_intr_enable(1);
+	gpio_intr_type(1, 2);
 	// gpio_intr_test(23);
 
-	plic_init(32, 0);
+	plic_init(2, 0);
 
-	isr_table[32] = handle_button_press;
+	isr_table[2] = handle_button_press;
 	
 
 

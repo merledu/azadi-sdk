@@ -100,3 +100,26 @@ void gpio_direct_write_enable(long pin){
 void gpio_direct_write_all_enable(uint32_t state){
     mem_write32(GPIO_START, GPIO_DIRECT_OE_REG_OFFSET, state);
 }
+
+// Interface Functions
+
+uint32_t digital_read(int pin){
+  uint32_t state = gpio_read_pin(pin);
+
+  return state;
+}
+
+uint32_t digital_read_all(){
+  uint32_t state = gpio_read_all();
+  return state;
+}
+
+void digital_write(){
+  gpio_direct_write_enable(5);
+	gpio_direct_write(5, 1);
+}
+
+void digital_write_all(uint32_t state){
+  gpio_direct_write_all_enable(state);
+  gpio_direct_write_all(state);
+}

@@ -3,7 +3,7 @@ RISCV ?= riscv32-unknown-elf-
 
 GCC=$(RISCV)gcc
 OBJDMP=$(RISCV)objdump
-GCCFLAGS=-march=rv32imfd -mabi=ilp32d -mcmodel=medany -g -O3
+GCCFLAGS=-march=rv32imfd -mabi=ilp32d -mcmodel=medany -g
 OBJFLAGS=--disassemble-all --disassemble-zeroes 
 # --section=.text --section=.text.startup --section=.text.init --section=.data
 LINK_FLAGS = -march=rv32imfd -mabi=ilp32d -static -nostdlib -nostartfiles -T $(CORE)/link.ld
@@ -27,7 +27,6 @@ compile :
 	$(GCC) $(GCCFLAGS) -I$(INCLUDE) -I$(LIBS) -c $(DRIVERS)/gpio/gpio.c -o generated/gpio.o -lgcc
 	$(GCC) $(GCCFLAGS) -I$(INCLUDE) -c $(DRIVERS)/timer/timer.c -o generated/timer.o -lgcc
 	$(GCC) $(GCCFLAGS) -I$(INCLUDE) -c $(DRIVERS)/pwm/pwm.c -o generated/pwm.o -lgcc
-	$(GCC) $(GCCFLAGS) -I$(INCLUDE) -I$(LIBS) -c $(DRIVERS)/sa/uart.c -o generated/uart.o -lgcc
 	$(GCC) $(GCCFLAGS) -I$(INCLUDE) -I$(LIBS) -c $(DRIVERS)/plic/plic.c -o generated/plic.o -lgcc	
 	$(GCC) $(GCCFLAGS) -I$(INCLUDE) -c $(DRIVERS)/spi/spi.c -o generated/spi.o -lgcc
 
