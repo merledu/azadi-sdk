@@ -1,6 +1,9 @@
 #include "gpio.h"
+#include "timer.h"
 
 int main(){
-    gpio_intr_enable(3);
+    digital_write(5, 1);
+    delay(200000);
+    digital_write(7, 1);
     return 0;
 }

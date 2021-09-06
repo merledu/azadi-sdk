@@ -102,3 +102,7 @@ void gpio_direct_write_all(uint32_t state);
 void gpio_intr_test(uint32_t index);
 uint32_t gpio_read_all();
 uint32_t gpio_read_pin(int pin);
+void digital_write_all(uint32_t state);
+void digital_write(int pin, int value);
+uint32_t digital_read_all();
+uint32_t digital_read(int pin);
