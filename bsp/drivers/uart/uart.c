@@ -8,43 +8,42 @@ and receive over UART interface.
 #include "uart.h"
 #include "utils.h"
 #include <math.h>
-#include <stdint.h>
+#include "timer.h"
 
 void uart_init(unsigned int baud_rate , unsigned int clock_frequency){
 	//computing formula : baud_rate = clock_frequency/baud_rate
 	uint32_t clock_per_bit = (clock_frequency / baud_rate) + 1;
-	mem_write32(UART_BASE_ADDRESS, UART_CNTRL_REGISTER_OFFSET, ((clock_per_bit << 3 | 2)));
+	mem_write32(UART_BASE_ADDRESS, UART_CNTRL_REGISTER_OFFSET, clock_per_bit);
 }
 
 void uart_send_char(char val ){
 	//transmitting character 
 	mem_write32(UART_BASE_ADDRESS, UART_WDATA_REGISTER_OFFSET, 	val);
-	//uint32_t nco = mem_read32(UART_BASE_ADDRESS, UART_CNTRL_REGISTER_OFFSET);
-	//uint32_t a = nco >> 3;
-	//mem_write32(UART_BASE_ADDRESS, UART_CNTRL_REGISTER_OFFSET, a | 1); 
+    mem_write32(UART_BASE_ADDRESS, UART_TX_ENABLE_REGISTER_OFFSET, 1);
 }
+
 
 void uart_send_str(char *str){
 	//transmitting string
 	while(*str != '\0'){
+
 		uart_send_char(*str++);
+		delay(500);
 	}
 }
 
 int uart_polled_data(){
 	//polling uart
-	uint32_t rcv_status = mem_read32(UART_BASE_ADDRESS, UART_CNTRL_REGISTER_OFFSET);
-	uint32_t rcv = rcv_status >> 2;
-	rcv = rcv_status << 31;
-	rcv = rcv_status >> 31;
-
-	if(rcv == 1){
-		uint32_t ret;
-		return ret = mem_read32(UART_BASE_ADDRESS, UART_RDATA_REGISTER_OFFSET);
+    mem_write32(UART_BASE_ADDRESS, UART_RX_ENABLE_REGISTER_OFFSET, 1);
+	uint32_t rcv_status = mem_read32(UART_BASE_ADDRESS, UART_RX_STATUS_REGISTER_OFFSET);
+	while(rcv_status != 1){
+		return mem_read32(UART_BASE_ADDRESS, UART_RDATA_REGISTER_OFFSET);
 	}
-	else{
-		return -1;
-	}
+	mem_write32(UART_BASE_ADDRESS, UART_RX_SC_REGISTER_OFFSET, 0);
 }
+
+
+
+
 
 
