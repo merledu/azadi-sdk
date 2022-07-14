@@ -11,7 +11,7 @@ LINK_FLAGS = -march=rv32imfd -mabi=ilp32d -static -nostdlib -nostartfiles -T $(C
 .PHONY : start upload compile
 
 start:
-	make compile build
+	make build
 
 compile : 
 	@cd ../../

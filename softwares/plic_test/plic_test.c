@@ -2,6 +2,7 @@
 #include "trap.h"
 #include "plic.h"
 #include "platform.h"
+#include "uart.h"
 
 
 void handle_button_press(__attribute__((unused)) uint32_t num);
@@ -32,7 +33,8 @@ while(1)
 
 	isr_table[2] = handle_button_press;
 	
-
+	// plic_init(33,0);
+	// isr_table[33] = handle_button_press;
 
 	// gpio_direct_write_enable(5);
 	// gpio_direct_write(5, 1);

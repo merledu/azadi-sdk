@@ -1,17 +1,17 @@
 
-RISCV ?= riscv64-unknown-elf-
+RISCV ?= riscv32-unknown-elf-
 
 GCC=$(RISCV)gcc
 OBJDMP=$(RISCV)objdump
-GCCFLAGS=-march=rv32imfdc -mabi=ilp32d -mcmodel=medany -g
+GCCFLAGS=-march=rv32imfc -mabi=ilp32 -mcmodel=medany -g
 OBJFLAGS=--disassemble-all --disassemble-zeroes 
 # --section=.text --section=.text.startup --section=.text.init --section=.data
-LINK_FLAGS = -march=rv32imfdc -mabi=ilp32d -static -nostdlib -nostartfiles -T $(CORE)/link.ld
+LINK_FLAGS = -march=rv32imfc -mabi=ilp32 -static -nostdlib -nostartfiles -T $(CORE)/link.ld
 
 .PHONY : start upload compile
 
 start:
-	make compile build
+	make build
 
 compile : 
 	@cd ../../
@@ -35,6 +35,6 @@ build :
 	@echo "building $(FILEPATH)/$(PROGRAM).c"
 	@mkdir $(FILEPATH)/output
 	$(GCC) $(GCCFLAGS) -I$(INCLUDE) -I$(LIBS) -I$(DRIVERS)/timer -I$(DRIVERS)/plic -I$(DRIVERS)/gpio -c $(FILEPATH)/$(PROGRAM).c -o $(FILEPATH)/output/$(PROGRAM).o -lgcc
-	$(GCC) $(LINK_FLAGS) $(CORE)/start.S $(CORE)/trap_entry.S generated/timer.o generated/utils.o generated/trap.o generated/plic.o generated/gpio.o $(FILEPATH)/output/$(PROGRAM).o -o $(FILEPATH)/output/$(PROGRAM).merl -lgcc
+	$(GCC) $(LINK_FLAGS) $(CORE)/start.S $(CORE)/trap_entry.S $(ROOT)/generated/timer.o $(ROOT)/generated/utils.o $(ROOT)/generated/trap.o $(ROOT)/generated/plic.o $(ROOT)/generated/gpio.o $(FILEPATH)/output/$(PROGRAM).o -o $(FILEPATH)/output/$(PROGRAM).merl -lgcc
 	$(OBJDMP) $(OBJFLAGS) $(FILEPATH)/output/$(PROGRAM).merl > $(FILEPATH)/output/$(PROGRAM).dump 
 	$(RISCV)elf2hex --bit-width 32 --input $(FILEPATH)/output/$(PROGRAM).merl --output $(ROOT)/program.hex

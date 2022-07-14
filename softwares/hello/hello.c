@@ -1,63 +1,45 @@
-#include "uart.h"
-#include "utils.h"
-#include "gpio.h"
-#include "timer.h"
-int main()
-{    
- // char *str = "waleed";
- // uart_send_str(str);
- // uart_send_char('w');
- // uart_init(9600, 9000000);
+#include "pwm.h"
+#include <stdio.h>
+int main() 
+{ 
+/*    
+unsigned char w = 0x46; //ascii code of w 119 or 0x77
+unsigned char a = 0x4c; //ascii code of a 97 or 0x61
+unsigned char d = 0x52; //ascii code of d 100 or 0x64
+unsigned char s = 0x42; //ascii code of s 115 or 0x73
 
-//uart_init(9600, 16000000);
-//Uart_Send_Str(str);
-//Set_Baud_Rate(9600);
-//Uart_Tx_Rdy('w');
+int forward = 4, backward = 7, right = 11, left = 15;
 
-/* 
-1- read data from rdata
-2- compare data with wdata
-3- if both are equal glow led on gpio3
-4- else gpio4
 
-*/
-//mem_write32(UART_BASE_ADDRESS, UART_CNTRL_REGISTER_OFFSET, 	1 << 1);
-//char rx = mem_read32(UART_BASE_ADDRESS, UART_RDATA_REGISTER_OFFSET);
-//mem_write32(UART_BASE_ADDRESS, UART_WDATA_REGISTER_OFFSET, 	rx);
-//uart_init(9600, 9000000);
-
-/*uint32_t tx = mem_read32(UART_BASE_ADDRESS, UART_WDATA_REGISTER_OFFSET);
-unit32_t rx = mem_read32(UART_BASE_ADDRESS, UART_RDATA_REGISTER_OFFSET);
-
-if(tx == rx){
-  		gpio_direct_write(3, 1);
-}
-else{
-	gpio_direct_write(4,1)
-}
-
-    return 0;
-}
-*/
 while(1)
 {
-  uart_init(9600 , 9000000);
-uint32_t rx = uart_polled_data();
-if (rx == -1){
-  gpio_direct_write(6, 1);
-  gpio_direct_write_enable(6);
-
-
+uart_init(9600 , 16000000);
+char c = uart_polled_data();
+if (c == w)
+{
+    gpio_direct_write_enable(forward);
+    gpio_direct_write(forward, 1);
 }
-else{
-    gpio_direct_write(7, 1);
-  gpio_direct_write_enable(7);
+else if (c == a)
+{
+    gpio_direct_write_enable(left);
+	gpio_direct_write(left, 1);
+}
+else if (c == d)
+{
+    gpio_direct_write_enable(right);
+	gpio_direct_write(right, 1);
+}
+else if(c == s)
+{
+    gpio_direct_write_enable(backward);
+	gpio_direct_write(backward, 1);
 }
 }
+*/
 
-//while(1)
-//{
-//  uart_send_char('w');
-//  uart_init(9600 , 9000000);
-//}
+while(1)
+{
+    PWM_DUTYCYCLE(2 , 70);
+}
 }
