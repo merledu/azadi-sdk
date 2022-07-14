@@ -1,3 +1,5 @@
+#!/bin/bash
+
 code="/home/waleed/Documents/PlatformIO/Projects/azadi-test/.pio/build/artix7_35t/firmware.hex"
 while read -r ins; do
     hex=($(sed 's/../\\x& /g' <<< $ins))
