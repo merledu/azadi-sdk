@@ -1,21 +1,10 @@
 
-# Azadi SDK setup
+# Azadi SDK V2.0
 
-This is the latest version of the Azadi SDK, which is under active development.
+This is the latest version of the Azadi SDK.
 
-## Getting started
+The SDK requires the `riscv 32-bit toolchain`. You can install it by downloading latest release from the github or compile them manually.
 
-These instructions were developed using a fresh Ubuntu 20.04 64-Bit.
-
-The following packages needed to be installed:
-
-~~~~~shell
-sudo apt-get install -y build-essential git libftdi-dev libftdi1 doxygen python3-pip libsdl2-dev curl cmake libusb-1.0-0-dev scons gtkwave libsndfile1-dev rsync autoconf automake texinfo libtool pkg-config libsdl2-ttf-dev
-~~~~~
-
-The SDK also requires the `riscv 32-bit toolchain` and `sifive-elf2hex` packages. You can install them by downloading latest release from their github or compile them manually (recommended):
-
-Please, refer to official guide to update gcc if is needed.
 
 ## SDK build
 
