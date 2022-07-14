@@ -6,16 +6,6 @@
 #include <stddef.h>
 #include "utils.h"
 
-// static uint32_t index_to_mask(uint32_t index) { return 1u << index; }
-
-// inline void mem_write32(uint32_t base, uint32_t offset,
-//                                 uint32_t value) {
-//   ((volatile uint32_t *)base)[offset / sizeof(uint32_t)] = value;
-// }
-
-// inline uint32_t mem_read32(uint32_t base, ptrdiff_t offset) {
-//   return ((volatile uint32_t *)base)[offset / sizeof(uint32_t)];
-// }
 
 void gpio_direct_bit_write(uint32_t offset, uint32_t index, bool val) {
   const uint32_t mask = index_to_mask(index % 32);
@@ -105,4 +95,31 @@ uint32_t gpio_read_pin(int pin){
 
 void gpio_direct_write_enable(long pin){
     gpio_direct_bit_write(GPIO_DIRECT_OE_REG_OFFSET, pin, 1);
+}
+
+void gpio_direct_write_all_enable(uint32_t state){
+    mem_write32(GPIO_START, GPIO_DIRECT_OE_REG_OFFSET, state);
+}
+
+// Interface Functions
+
+uint32_t digital_read(int pin){
+  uint32_t state = gpio_read_pin(pin);
+
+  return state;
+}
+
+uint32_t digital_read_all(){
+  uint32_t state = gpio_read_all();
+  return state;
+}
+
+void digital_write(int pin, int value){
+  gpio_direct_write_enable(5);
+	gpio_direct_write(5, 1);
+}
+
+void digital_write_all(uint32_t state){
+  gpio_direct_write_all_enable(state);
+  gpio_direct_write_all(state);
 }

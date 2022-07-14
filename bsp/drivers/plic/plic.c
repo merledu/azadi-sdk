@@ -5,6 +5,7 @@
 #include <stdbool.h>
 #include <stdint.h>
 #include "utils.h"
+#include <gpio.h>
 
 
 
@@ -142,4 +143,27 @@ void plic_init(int p_id, uint32_t t_id)
 	plic_set_priority(p_id, 3);
 	plic_irq_set_enabled(p_id, true, 0);
 	plic_irq_set_trigger(p_id, t_id);
+}
+
+
+void attach_interrupt(int int_id, void (*isr), int gpio_trigger_id){
+  // gpio_trigger_id = 1 or 2 means plic should be edge triggered, hence value 1. 
+  int plic_trigger_id = gpio_trigger_id < 2 ? 1 : 0;
+
+  
+  plic_init(int_id, plic_trigger_id);
+  gpio_intr_enable(int_id);
+  gpio_intr_type(int_id, gpio_trigger_id);
+
+  isr_table[int_id] = isr;
+
+  // Enable Global (PLIC) interrupts.
+	asm volatile("li      t0, 8\t\n"
+		     "csrrs   zero, mstatus, t0\t\n"
+		    );
+
+	// Enable Local (PLIC) interrupts.
+	asm volatile("li      t0, 0x800\t\n"
+		     "csrrs   zero, mie, t0\t\n"
+		    );
 }
