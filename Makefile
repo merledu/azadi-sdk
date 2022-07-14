@@ -5,9 +5,8 @@ export LIBS
 export FILEPATH
 export ROOT
 
-PROGRAM ?= 
 
- 
+PROGRAM ?= plic_test
 
 ROOT := $(shell pwd)
 FILEPATH := $(ROOT)/softwares/$(PROGRAM)

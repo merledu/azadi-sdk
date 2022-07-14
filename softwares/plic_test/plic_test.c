@@ -60,6 +60,5 @@ while(1)
 	asm volatile("li      t0, 0x800\t\n"
 		     "csrrs   zero, mie, t0\t\n"
 		    );
-}
 	return 0;
 }
