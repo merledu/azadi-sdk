@@ -5,7 +5,7 @@
 **/output
 *.hex
 
-.vscode/*
+**/.vscode/
 
 # Object files
 *.o
