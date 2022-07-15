@@ -20,10 +20,10 @@ LIBS := $(BSP)/libs
 RISCV=riscv32-unknown-elf-
 GCC=$(RISCV)gcc
 OBJDMP=$(RISCV)objdump
-GCCFLAGS=-march=rv32im -mabi=ilp32 -mcmodel=medany -g
+GCCFLAGS=-march=rv32im_zicsr_zifencei -mabi=ilp32 -mcmodel=medany -g
 OBJFLAGS=--disassemble-all --disassemble-zeroes 
 # --section=.text --section=.text.startup --section=.text.init --section=.data
-LINK_FLAGS = -march=rv32im -mabi=ilp32 -static -nostdlib -nostartfiles -T $(CORE)/link.ld
+LINK_FLAGS = -march=rv32im_zicsr_zifencei -mabi=ilp32 -static -nostdlib -nostartfiles -T $(CORE)/link.ld
 
 
 

@@ -1,8 +1,6 @@
-#include "define.h"
 .global trap_entry
 
 .align 2
-nop
 
 trap_entry:
 addi sp, sp, -128

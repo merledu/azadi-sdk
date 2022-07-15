@@ -1,4 +1,6 @@
 #include "trap.h"
+
+
 mtrap_fptr_t mcause_trap_table[MAX_TRAP_VALUE];
 mtrap_fptr_t mcause_interrupt_table[MAX_INTERRUPT_VALUE];
 
@@ -28,7 +30,6 @@ uintptr_t handle_trap(uintptr_t mcause, uintptr_t epc)
 			mach_plic_handler(mcause, epc);
 		else if (ie_entry == 7)
 			mach_timer_handler(mcause, epc);
-			
 	}
 	else{
 		mcause_trap_table[mcause](mcause, epc);
