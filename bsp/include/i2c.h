@@ -8,5 +8,5 @@
 #define I2C_RX_REGISTER 0x0C
 
 void I2c_Prescalar();
-void I2c_Transmit(unsigned char a , int Slave_Select);
+void I2c_Transmit(unsigned char a, int Slave_Select);
 int I2c_Recieve(int Slave_Select);

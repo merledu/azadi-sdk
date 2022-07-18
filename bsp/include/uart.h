@@ -6,9 +6,7 @@
 #define UART_TX_ENABLE_REGISTER_OFFSET 0x10
 #define UART_RX_STATUS_REGISTER_OFFSET 0X14
 #define UART_RX_SC_REGISTER_OFFSET 0x18
-void uart_init(unsigned int baud_rate , unsigned int clock_frequency);
-void uart_send_char(char val );
-void uart_send_str(char *str);
+void uart_init(unsigned int baud_rate, unsigned int clock_frequency);
+void uart_send_char(char val);
+void uart_send_str(char* str);
 int uart_polled_data();
-
-

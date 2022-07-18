@@ -7,7 +7,6 @@ Filename: gpio.h
 #include "platform.h"
 #include "stdint.h"
 
-
 // Register width
 #define GPIO_PARAM_REG_WIDTH 32
 
@@ -32,23 +31,27 @@ Filename: gpio.h
 #define GPIO_MASKED_OUT_LOWER_REG_OFFSET 0x14
 #define GPIO_MASKED_OUT_LOWER_DATA_MASK 0xffff
 #define GPIO_MASKED_OUT_LOWER_DATA_OFFSET 0
-#define GPIO_MASKED_OUT_LOWER_DATA_FIELD \
-  ((bitfield_field32_t) { .mask = GPIO_MASKED_OUT_LOWER_DATA_MASK, .index = GPIO_MASKED_OUT_LOWER_DATA_OFFSET })
+#define GPIO_MASKED_OUT_LOWER_DATA_FIELD                         \
+  ((bitfield_field32_t){.mask = GPIO_MASKED_OUT_LOWER_DATA_MASK, \
+                        .index = GPIO_MASKED_OUT_LOWER_DATA_OFFSET})
 #define GPIO_MASKED_OUT_LOWER_MASK_MASK 0xffff
 #define GPIO_MASKED_OUT_LOWER_MASK_OFFSET 16
-#define GPIO_MASKED_OUT_LOWER_MASK_FIELD \
-  ((bitfield_field32_t) { .mask = GPIO_MASKED_OUT_LOWER_MASK_MASK, .index = GPIO_MASKED_OUT_LOWER_MASK_OFFSET })
+#define GPIO_MASKED_OUT_LOWER_MASK_FIELD                         \
+  ((bitfield_field32_t){.mask = GPIO_MASKED_OUT_LOWER_MASK_MASK, \
+                        .index = GPIO_MASKED_OUT_LOWER_MASK_OFFSET})
 
 // GPIO write data upper with mask.
 #define GPIO_MASKED_OUT_UPPER_REG_OFFSET 0x18
 #define GPIO_MASKED_OUT_UPPER_DATA_MASK 0xffff
 #define GPIO_MASKED_OUT_UPPER_DATA_OFFSET 0
-#define GPIO_MASKED_OUT_UPPER_DATA_FIELD \
-  ((bitfield_field32_t) { .mask = GPIO_MASKED_OUT_UPPER_DATA_MASK, .index = GPIO_MASKED_OUT_UPPER_DATA_OFFSET })
+#define GPIO_MASKED_OUT_UPPER_DATA_FIELD                         \
+  ((bitfield_field32_t){.mask = GPIO_MASKED_OUT_UPPER_DATA_MASK, \
+                        .index = GPIO_MASKED_OUT_UPPER_DATA_OFFSET})
 #define GPIO_MASKED_OUT_UPPER_MASK_MASK 0xffff
 #define GPIO_MASKED_OUT_UPPER_MASK_OFFSET 16
-#define GPIO_MASKED_OUT_UPPER_MASK_FIELD \
-  ((bitfield_field32_t) { .mask = GPIO_MASKED_OUT_UPPER_MASK_MASK, .index = GPIO_MASKED_OUT_UPPER_MASK_OFFSET })
+#define GPIO_MASKED_OUT_UPPER_MASK_FIELD                         \
+  ((bitfield_field32_t){.mask = GPIO_MASKED_OUT_UPPER_MASK_MASK, \
+                        .index = GPIO_MASKED_OUT_UPPER_MASK_OFFSET})
 
 // GPIO Output Enable.
 #define GPIO_DIRECT_OE_REG_OFFSET 0x1c
@@ -57,23 +60,27 @@ Filename: gpio.h
 #define GPIO_MASKED_OE_LOWER_REG_OFFSET 0x20
 #define GPIO_MASKED_OE_LOWER_DATA_MASK 0xffff
 #define GPIO_MASKED_OE_LOWER_DATA_OFFSET 0
-#define GPIO_MASKED_OE_LOWER_DATA_FIELD \
-  ((bitfield_field32_t) { .mask = GPIO_MASKED_OE_LOWER_DATA_MASK, .index = GPIO_MASKED_OE_LOWER_DATA_OFFSET })
+#define GPIO_MASKED_OE_LOWER_DATA_FIELD                         \
+  ((bitfield_field32_t){.mask = GPIO_MASKED_OE_LOWER_DATA_MASK, \
+                        .index = GPIO_MASKED_OE_LOWER_DATA_OFFSET})
 #define GPIO_MASKED_OE_LOWER_MASK_MASK 0xffff
 #define GPIO_MASKED_OE_LOWER_MASK_OFFSET 16
-#define GPIO_MASKED_OE_LOWER_MASK_FIELD \
-  ((bitfield_field32_t) { .mask = GPIO_MASKED_OE_LOWER_MASK_MASK, .index = GPIO_MASKED_OE_LOWER_MASK_OFFSET })
+#define GPIO_MASKED_OE_LOWER_MASK_FIELD                         \
+  ((bitfield_field32_t){.mask = GPIO_MASKED_OE_LOWER_MASK_MASK, \
+                        .index = GPIO_MASKED_OE_LOWER_MASK_OFFSET})
 
 // GPIO write Output Enable upper with mask.
 #define GPIO_MASKED_OE_UPPER_REG_OFFSET 0x24
 #define GPIO_MASKED_OE_UPPER_DATA_MASK 0xffff
 #define GPIO_MASKED_OE_UPPER_DATA_OFFSET 0
-#define GPIO_MASKED_OE_UPPER_DATA_FIELD \
-  ((bitfield_field32_t) { .mask = GPIO_MASKED_OE_UPPER_DATA_MASK, .index = GPIO_MASKED_OE_UPPER_DATA_OFFSET })
+#define GPIO_MASKED_OE_UPPER_DATA_FIELD                         \
+  ((bitfield_field32_t){.mask = GPIO_MASKED_OE_UPPER_DATA_MASK, \
+                        .index = GPIO_MASKED_OE_UPPER_DATA_OFFSET})
 #define GPIO_MASKED_OE_UPPER_MASK_MASK 0xffff
 #define GPIO_MASKED_OE_UPPER_MASK_OFFSET 16
-#define GPIO_MASKED_OE_UPPER_MASK_FIELD \
-  ((bitfield_field32_t) { .mask = GPIO_MASKED_OE_UPPER_MASK_MASK, .index = GPIO_MASKED_OE_UPPER_MASK_OFFSET })
+#define GPIO_MASKED_OE_UPPER_MASK_FIELD                         \
+  ((bitfield_field32_t){.mask = GPIO_MASKED_OE_UPPER_MASK_MASK, \
+                        .index = GPIO_MASKED_OE_UPPER_MASK_OFFSET})
 
 // GPIO interrupt enable for GPIO, rising edge.
 #define GPIO_INTR_CTRL_EN_RISING_REG_OFFSET 0x28
@@ -90,8 +97,7 @@ Filename: gpio.h
 // filter enable for GPIO input bits.
 #define GPIO_CTRL_EN_INPUT_FILTER_REG_OFFSET 0x38
 
-
-unsigned long read_gpio(uint32_t *addr);
+unsigned long read_gpio(uint32_t* addr);
 void gpio_direct_write(long pin, int val);
 void gpio_direct_write_enable(long pin);
 void gpio_direct_write_all_enable(uint32_t state);

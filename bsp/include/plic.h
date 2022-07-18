@@ -1,10 +1,11 @@
 
 #ifndef PLIC_DRIVER_H
 #define PLIC_DRIVER_H
-#include "trap.h"
-#include "platform.h"
 #include <stdbool.h>
 #include <stddef.h>
+
+#include "platform.h"
+#include "trap.h"
 
 /* Macros */
 
@@ -16,9 +17,7 @@
 // #define PLIC_THRESHOLD_OFFSET           0x10000UL
 // #define PLIC_CLAIM_OFFSET               0x10010UL
 
-
-#define PLIC_PRIORITY_SHIFT_PER_INT  2
-
+#define PLIC_PRIORITY_SHIFT_PER_INT 2
 
 #define PLIC_PRIORITY_1 0X30
 #define PLIC_PRIORITY_2 0X34
@@ -28,30 +27,27 @@
 #define PLIC_PRIORITY_6 0X44
 #define PLIC_PRIORITY_7 0X48
 
-#define PLIC_PENDING_SHIFT_PER_SOURCE   0
+#define PLIC_PENDING_SHIFT_PER_SOURCE 0
 
 /* Enumerators */
 
-typedef enum
-{
-	INACTIVE = 0,
-	ACTIVE   = 1,
-	SERVICED = 2,
-	MASKED
-}interrupt_status_e;
+typedef enum {
+  INACTIVE = 0,
+  ACTIVE = 1,
+  SERVICED = 2,
+  MASKED
+} interrupt_status_e;
 
 /* Structures and Unions */
 
-typedef struct
-{
-	uint32_t id; /*id of the interrupt target source*/
-	uint32_t priority; /*priority assigned to it*/
-	interrupt_status_e state; /*state of the interrupt*/
-	uint32_t count; /*number of times this interrupt occured*/
+typedef struct {
+  uint32_t id;              /*id of the interrupt target source*/
+  uint32_t priority;        /*priority assigned to it*/
+  interrupt_status_e state; /*state of the interrupt*/
+  uint32_t count;           /*number of times this interrupt occured*/
 } interrupt_data_t;
 
-
-typedef void (*plic_fptr_t) (uint32_t);
+typedef void (*plic_fptr_t)(uint32_t);
 extern plic_fptr_t isr_table[PLIC_MAX_INTERRUPT_SRC];
 
 /* Function prototypes */
@@ -63,7 +59,8 @@ void interrupt_enable(uint32_t interrupt_id);
 void mach_plic_handler(uintptr_t int_id, uintptr_t epc);
 void interrupt_disable(uint32_t interrupt_id);
 void set_interrupt_threshold(uint32_t priority_value);
-void set_interrupt_priority(uint32_t priority_value, uint32_t int_id, int priority);
+void set_interrupt_priority(uint32_t priority_value, uint32_t int_id,
+                            int priority);
 void configure_interrupt_pin(uint32_t pin);
 void plic_init(int p_id, uint32_t t_id);
 void configure_interrupt(uint32_t int_id);
@@ -76,7 +73,7 @@ void plic_irq_complete(const uint32_t complete_data);
 // void plic_irq_set_enabled(uint32_t irq, bool state);
 void plic_irq_set_enabled(uint32_t irq, uint8_t state, uint32_t target);
 void plic_irq_set_trigger(uint32_t irq, uint32_t trigger);
-void attach_interrupt(int int_id, void (*isr), int gpio_trigger_id);
+void attach_interrupt(int int_id, void(*isr), int gpio_trigger_id);
 
 // typedef struct bitfield_field32 {
 //   /** The field mask. Usually all ones. */
@@ -84,7 +81,6 @@ void attach_interrupt(int int_id, void (*isr), int gpio_trigger_id);
 //   /** The field position in the bitfield, counting from the zero-bit. */
 //   uint32_t index;
 // } bitfield_field32_t;
-
 
 // extern uint32_t bitfield_bit32_write(uint32_t bitfield,
 //                                      uint32_t bit_index,

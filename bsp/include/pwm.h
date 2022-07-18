@@ -7,4 +7,4 @@
 #define PWM_CONTROL_REGISTER_OFFSET2 0x10
 #define PWM_DIVISOR_REGISTER_OFFSET2 0x14
 #define PWM_PERIOD_REGISTER_OFFSET2 0x18
-void PWM_DUTYCYCLE(int channel , int duty_cycle);
+void PWM_DUTYCYCLE(int channel, int duty_cycle);

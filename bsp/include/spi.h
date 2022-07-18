@@ -7,7 +7,7 @@
 //#define Char_Len 0x20
 
 void Set_Speed(int Divider);
-void Spi_Write(unsigned char a , int Select_Line, int Char_Len);
-void Spi_Read(int Select_Line,  int Char_Len);
+void Spi_Write(unsigned char a, int Select_Line, int Char_Len);
+void Spi_Read(int Select_Line, int Char_Len);
 void Isr_Tx_Spi();
 void Isr_Rx_Spi();
