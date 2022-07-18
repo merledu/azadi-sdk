@@ -1,7 +1,7 @@
 /**
 @file uart.c
 @brief Contains the driver routines for UART interface.
-@detail The UART driver .has software functions to configure, transmit
+@detail The UART driver has software functions to configure, transmit
 and receive over UART interface.
 */
 
