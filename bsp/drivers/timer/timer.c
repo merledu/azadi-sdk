@@ -4,6 +4,7 @@
 #include <stdint.h>
 
 #include "utils.h"
+
 void mach_timer_handler(__attribute__((unused)) uintptr_t int_id,
                         __attribute__((unused)) uintptr_t epc) {
   __asm__ __volatile__(
