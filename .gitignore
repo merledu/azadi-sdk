@@ -4,6 +4,7 @@
 /generated
 **/output
 *.hex
+build/
 
 **/.vscode/
 
