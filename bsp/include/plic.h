@@ -3,9 +3,10 @@
 #define PLIC_DRIVER_H
 #include <stdbool.h>
 #include <stddef.h>
+#include <stdint.h>
 
 #include "platform.h"
-#include "trap.h"
+#include "plic-regs.h"
 
 /* Macros */
 

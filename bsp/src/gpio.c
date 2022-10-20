@@ -1,10 +1,5 @@
 #include "gpio.h"
 
-#include <stdbool.h>
-#include <stddef.h>
-#include <stdint.h>
-
-#include "platform.h"
 #include "plic.h"
 #include "utils.h"
 

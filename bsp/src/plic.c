@@ -1,12 +1,6 @@
 #include "plic.h"
 
-#include <stdbool.h>
-#include <stddef.h>
-#include <stdint.h>
-
 #include "gpio.h"
-#include "platform.h"
-#include "plic-regs.h"
 #include "utils.h"
 
 plic_fptr_t isr_table[PLIC_MAX_INTERRUPT_SRC];
@@ -56,10 +50,10 @@ static plic_reg_info_t plic_irq_trigger_type_reg_info(uint32_t irq) {
 }
 
 uint32_t interrupt_claim_request() {
-  uint32_t *interrupt_claim_address = NULL;
+  uint32_t* interrupt_claim_address = NULL;
   uint32_t interrupt_id;
   interrupt_claim_address =
-      (uint32_t *)(PLIC_BASE_ADDRESS + RV_PLIC_CC0_REG_OFFSET);
+      (uint32_t*)(PLIC_BASE_ADDRESS + RV_PLIC_CC0_REG_OFFSET);
   interrupt_id = *interrupt_claim_address;
   return interrupt_id;
 }
@@ -140,10 +134,12 @@ void attach_interrupt(int int_id, void(*isr), int gpio_trigger_id) {
   isr_table[int_id] = isr;
 
   // Enable Global (PLIC) interrupts.
-  asm volatile("li      t0, 8\t\n"
-               "csrrs   zero, mstatus, t0\t\n");
+  asm volatile(
+      "li      t0, 8\t\n"
+      "csrrs   zero, mstatus, t0\t\n");
 
   // Enable Local (PLIC) interrupts.
-  asm volatile("li      t0, 0x800\t\n"
-               "csrrs   zero, mie, t0\t\n");
+  asm volatile(
+      "li      t0, 0x800\t\n"
+      "csrrs   zero, mie, t0\t\n");
 }
