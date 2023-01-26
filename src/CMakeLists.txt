@@ -1,4 +1,4 @@
-add_library(bsp STATIC 
+add_library(src 
     gpio.c
     i2c.c
     isr_spi_rx.c
