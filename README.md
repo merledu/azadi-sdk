@@ -5,9 +5,9 @@ This is the latest unstable version of the Azadi SDK. Requires [`riscv-gnu-toolc
 
 ## Build Instructions
 
-``
-mkdir build
-cd build
-cmake -DCMAKE_TOOLCHAIN_FILE=../tools/TC-riscv.cmake ../
-cmake --build .
-``
+```
+$ mkdir build
+$ cd build
+$ cmake -DCMAKE_TOOLCHAIN_FILE=../tools/TC-riscv.cmake ../
+$ cmake --build .
+```
