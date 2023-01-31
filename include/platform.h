@@ -34,36 +34,35 @@
 #define HEAP_PERCENTAGE 50 /*! DDR3 Memory Size */
 
 /*!Pulse Width Modulation Start Offsets */
-#define PWM_BASE_ADDRESS 0x00030000 /*PWM Base address*/
-#define PWM_MODULE_OFFSET \
-  0x00000100 /*Offset value to be incremented for each interface*/
+#define PWM0_START 0x40004000 /*PWM Base address*/
+#define PWM1_START 0x40004100 /*PWM Base address*/
+#define PWM2_START 0x40004200 /*PWM Base address*/
+#define PWM3_START 0x40004300 /*PWM Base address*/
 
 /*!Serial Peripheral Interface Offsets */
-#define SPI0_START 0x00020000 /* Serial Peripheral Interface 0 */
-#define SPI1_START 0x00020100 /* Serial Peripheral Interface 1 */
-#define SPI2_START 0x00020200 /* Serial Peripheral Interface 2 */
+#define SPI0_START 0x40003000 /* Serial Peripheral Interface 0 */
+#define SPI1_START 0x40003100 /* Serial Peripheral Interface 1 */
+#define SPI2_START 0x40003200 /* Serial Peripheral Interface 2 */
+#define SPI3_START 0x40003300 /* Serial Peripheral Interface 3 */
 
 /*!Universal Synchronous Receiver Transmitter Interface Offsets */
-#define UART0_START 0x40060000 /*! UART 0 */
+#define UART0_START 0x40002000 /*! UART 0 */
 #define UART_OFFSET 0x100
 #define MAX_UART_COUNT 3
+#define UART1_START 0x40002200
+#define UART2_START 0x40002300
 
 #define PINMUX_CONFIGURE_REG 0x40310
 
-/*! Core Local Interruptor CLINT */
-
-/*! Inter Integrated Circuit (I2C) Interface */
-#define I2C0_BASE 0x00040000 /*! I2C Start Address */
-#define I2C_OFFSET 0x000
-#define MAX_I2C_COUNT 1
-
 /* TIMER */
 
-#define TIMER_BASE_ADDRESS 0x40000000
+#define TIMER0_BASE_ADDRESS 0x30000000
 #define TIMER_CMP_OFFSET 0x10c
+#define TIMER1_BASE_ADDRESS 0x30001000
+#define TIMER2_BASE_ADDRESS 0x30002000
 
 /*! Programmable Logic Interrupt Interface */
-#define PLIC_BASE_ADDRESS 0x40050000 /*! PLIC Interface Start */
+#define PLIC_BASE_ADDRESS 0x50000000 /*! PLIC Interface Start */
 #define PLIC_INTERRUPT_1 1
 #define PLIC_INTERRUPT_2 2
 #define PLIC_INTERRUPT_3 3
@@ -86,7 +85,7 @@
 #define PLIC_MAX_INTERRUPT_SRC 64
 
 /*!General Purpose Input Output */
-#define GPIO_START 0x400c0000  // GPIO Start Address
+#define GPIO_BASE_ADDRESS 0x40001000  // GPIO Start Address
 #define GPIO_OFFSET 0x04       /*!Generic offset used to access GPIO registers*/
 
 /*
