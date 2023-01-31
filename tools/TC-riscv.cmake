@@ -11,10 +11,15 @@ FIND_FILE( RISCV_XPACK_GCC_COMPILER "riscv-none-embed-gcc" PATHS ENV INCLUDE)
 FIND_FILE( RISCV_XPACK_NEW_GCC_COMPILER_EXE "riscv-none-elf-gcc.exe" PATHS ENV INCLUDE)
 FIND_FILE( RISCV_XPACK_NEW_GCC_COMPILER "riscv-none-elf-gcc" PATHS ENV INCLUDE)
 
-# Look for RISC-V github GCC
+# Look for RISC64-V github GCC
 # https://github.com/riscv/riscv-gnu-toolchain
 FIND_FILE( RISCV_XPACK_GCC_COMPILER_EXT "riscv64-unknown-elf-gcc.exe" PATHS ENV INCLUDE)
 FIND_FILE( RISCV_XPACK_GCC_COMPILER "riscv64-unknown-elf-gcc" PATHS ENV INCLUDE)
+
+# Look for RISC32-V github GCC
+# https://github.com/riscv/riscv-gnu-toolchain
+FIND_FILE( RISCV_XPACK_GCC_COMPILER_EXT "riscv32-unknown-elf-gcc.exe" PATHS ENV INCLUDE)
+FIND_FILE( RISCV_XPACK_GCC_COMPILER "riscv32-unknown-elf-gcc" PATHS ENV INCLUDE)
 
 # Select which is found
 if (EXISTS ${RISCV_XPACK_NEW_GCC_COMPILER})
