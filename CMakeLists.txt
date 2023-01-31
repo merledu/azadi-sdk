@@ -5,8 +5,10 @@ project(AzadiSDK C)
 
 set(TARGET test)
 
+set(TESTNAME gpio_test CACHE STRING "Enter name of a test.")
+
 add_subdirectory(src)
-add_executable( ${TARGET}.elf softwares/gpio_test/gpio_test.c azadi/start.S)
+add_executable( ${TARGET}.elf softwares/${TESTNAME}/${TESTNAME}.c azadi/start.S)
 target_sources( ${TARGET}.elf PUBLIC "${CMAKE_SOURCE_DIR}/azadi/start.S"
 									"${CMAKE_SOURCE_DIR}/azadi/trap.c"
 									"${CMAKE_SOURCE_DIR}/azadi/trap_entry.S" )
