@@ -85,7 +85,7 @@
 #define PLIC_MAX_INTERRUPT_SRC 64
 
 /*!General Purpose Input Output */
-#define GPIO_BASE_ADDRESS 0x40001000  // GPIO Start Address
+#define GPIO_START 0x40001000  // GPIO Start Address
 #define GPIO_OFFSET 0x04       /*!Generic offset used to access GPIO registers*/
 
 /*

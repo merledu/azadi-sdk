@@ -3,6 +3,7 @@
 #include <stdbool.h>
 #include <stdint.h>
 
+#include "platform.h"
 #include "utils.h"
 
 void mach_timer_handler(__attribute__((unused)) uintptr_t int_id,
@@ -23,9 +24,9 @@ void mach_timer_handler(__attribute__((unused)) uintptr_t int_id,
 }
 
 void delay(int a) {
-  mem_write32(TIMER_BASE_ADDRESS, TIMER_CMP_OFFSET, (a * 4));
+  mem_write32(TIMER0_BASE_ADDRESS, TIMER_CMP_OFFSET, (a * 4));
   // timer compare upper
-  mem_write32(TIMER_BASE_ADDRESS, TIMER_CMP_UPPER_OFFSET, 0);
+  mem_write32(TIMER0_BASE_ADDRESS, TIMER_CMP_UPPER_OFFSET, 0);
 
   __asm__ __volatile__(
       "li x5 , 0x80;"
@@ -35,11 +36,11 @@ void delay(int a) {
       "csrrs x0 , 0x304, x5;");
   // configuration for hart 0
   int prescale = 1 << 16 | 4000;
-  mem_write32(TIMER_BASE_ADDRESS, TIMER_CONFIG_HART0_OFFSET, prescale);
+  mem_write32(TIMER0_BASE_ADDRESS, TIMER_CONFIG_HART0_OFFSET, prescale);
   // interrupt enable
-  mem_write32(TIMER_BASE_ADDRESS, TIMER_INTERRUPT_ENABLE_OFFSET, 1);
+  mem_write32(TIMER0_BASE_ADDRESS, TIMER_INTERRUPT_ENABLE_OFFSET, 1);
   // control register
-  mem_write32(TIMER_BASE_ADDRESS, TIMER_CNTRL_REGISTER_OFFSET, 1);
+  mem_write32(TIMER0_BASE_ADDRESS, TIMER_CNTRL_REGISTER_OFFSET, 1);
 
   __asm__ __volatile__("wfi;");
 }
