@@ -4,6 +4,10 @@
 #include "timer.h"
 #include "utils.h"
 
+void tic_intr_enable() {
+  mem_write32(TIC_BASE_ADDRESS, TIC_INTR_ENABLE_REG_OFFSET, 1);
+}
+
 void mach_timer_handler(uintptr_t int_id, uintptr_t epc) {
   uint32_t timer_id = mem_read32(TIC_BASE_ADDRESS, TIC_CC_REG_OFFSET);
 

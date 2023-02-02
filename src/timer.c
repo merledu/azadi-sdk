@@ -4,9 +4,13 @@
 #include <stdint.h>
 
 #include "platform.h"
+#include "tic.h"
 #include "utils.h"
 
 void delay(int a) {
+  // enable tic interrupt
+  tic_intr_enable();
+
   // timer compare offset
   mem_write32(TIMER0_BASE_ADDRESS, TIMER_CMP_LOWER_REG_OFFSET, (a * 4));
 
