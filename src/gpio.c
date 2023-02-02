@@ -106,8 +106,8 @@ uint32_t digital_read_all() {
 }
 
 void digital_write(int pin, int value) {
-  gpio_direct_write_enable(5);
-  gpio_direct_write(5, 1);
+  gpio_direct_write_enable(pin);
+  gpio_direct_write(pin, value);
 }
 
 void digital_write_all(uint32_t state) {
