@@ -9,6 +9,9 @@
 #define MAX_TRAP_VALUE 16
 #define INSTRUCTION_ADDRESS_MISALIGNED 0
 
+#define PLIC_INTR_CODE 11
+#define TIC_INTR_CODE 7
+
 typedef void (*mtrap_fptr_t)(uintptr_t trap_cause, uintptr_t epc);
 mtrap_fptr_t mcause_trap_table[MAX_TRAP_VALUE];
 mtrap_fptr_t mcause_interrupt_table[MAX_INTERRUPT_VALUE];

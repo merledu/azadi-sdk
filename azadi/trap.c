@@ -1,7 +1,7 @@
 #include "trap.h"
 
 #include "plic.h"
-#include "timer.h"
+#include "tic.h"
 
 unsigned int extract_ie_code(unsigned int num) {
   unsigned int exception_code;
@@ -23,9 +23,9 @@ uintptr_t handle_trap(uintptr_t mcause, uintptr_t epc) {
   /* checking for type of trap */
   if (mcause & (1 << (shift_length))) {
     ie_entry = extract_ie_code(mcause);
-    if (ie_entry == 11)
+    if (ie_entry == PLIC_INTR_CODE)
       mach_plic_handler(mcause, epc);
-    else if (ie_entry == 7)
+    else if (ie_entry == TIC_INTR_CODE)
       mach_timer_handler(mcause, epc);
   }
   return epc;
