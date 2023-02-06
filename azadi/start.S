@@ -13,5 +13,6 @@ _start:
     la sp, __stack_top
     add s0, sp, zero
     jal zero, main
+    nop
     .cfi_endproc
     .end
