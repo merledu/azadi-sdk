@@ -52,7 +52,7 @@ message( "RISC-V Cross Compile: ${CROSS_COMPILE}" )
 # The Generic system name is used for embedded targets (targets without OS) in
 # CMake
 set( CMAKE_SYSTEM_NAME          Generic )
-set( CMAKE_SYSTEM_PROCESSOR     rv32imc )
+set( CMAKE_SYSTEM_PROCESSOR     rv32im )
 set( CMAKE_EXECUTABLE_SUFFIX    ".elf")
 
 # specify the cross compiler. We force the compiler so that CMake doesn't
