@@ -32,3 +32,7 @@ add_custom_command(TARGET ${TARGET}.elf POST_BUILD
 add_custom_command(TARGET ${TARGET}.elf POST_BUILD
         COMMAND ${CMAKE_OBJCOPY} -O verilog  ${TARGET}.elf  ${TARGET}.hex
         COMMENT "Invoking: Hexdump")
+
+# Post processing command to add terminating instruction to hex file 
+add_custom_command(TARGET ${TARGET}.elf POST_BUILD
+        COMMAND echo -n "00 FF FF 00" >> ${TARGET}.hex)
