@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 3.16)
 enable_language(ASM)
+enable_language(CXX)
 
 project(AzadiSDK C)
 
@@ -8,7 +9,8 @@ set(TARGET test)
 set(TESTNAME gpio_test CACHE STRING "Enter name of a test.")
 
 add_subdirectory(src)
-add_executable( ${TARGET}.elf softwares/${TESTNAME}/${TESTNAME}.c azadi/start.S)
+add_subdirectory("${CMAKE_SOURCE_DIR}/external/tflm")
+add_executable( ${TARGET}.elf softwares/${TESTNAME}/${TESTNAME}.c)
 target_sources( ${TARGET}.elf PUBLIC "${CMAKE_SOURCE_DIR}/azadi/start.S"
 									"${CMAKE_SOURCE_DIR}/azadi/trap.c"
 									"${CMAKE_SOURCE_DIR}/azadi/trap_entry.S" )
@@ -16,9 +18,8 @@ SET(LINKER_SCRIPT "${CMAKE_SOURCE_DIR}/azadi/link.ld")
 
 set_target_properties( ${TARGET}.elf PROPERTIES LINK_DEPENDS "${LINKER_SCRIPT}" )
 
-target_link_libraries( ${TARGET}.elf PUBLIC src )
-target_include_directories( ${TARGET}.elf PUBLIC "${PROJECT_SOURCE_DIR}/include" )
-target_include_directories( src PUBLIC "${PROJECT_SOURCE_DIR}/include" )
+target_link_libraries( ${TARGET}.elf PUBLIC src tflm )
+target_include_directories( ${TARGET}.elf PUBLIC "${PROJECT_BINARY_DIR}" )
 
 
 SET(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -static -T ${LINKER_SCRIPT}")
