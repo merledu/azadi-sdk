@@ -11,3 +11,5 @@ add_library(src
     uart.c
     utils.c
 )
+
+target_include_directories( src PUBLIC "${PROJECT_SOURCE_DIR}/include" )
