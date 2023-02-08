@@ -11,12 +11,17 @@ FIND_FILE( RISCV_XPACK_GCC_COMPILER "riscv-none-embed-gcc" PATHS ENV INCLUDE)
 FIND_FILE( RISCV_XPACK_NEW_GCC_COMPILER_EXE "riscv-none-elf-gcc.exe" PATHS ENV INCLUDE)
 FIND_FILE( RISCV_XPACK_NEW_GCC_COMPILER "riscv-none-elf-gcc" PATHS ENV INCLUDE)
 
-# Look for RISC64-V github GCC
+# Look for RISC64-V Newlib github GCC
 # https://github.com/riscv/riscv-gnu-toolchain
 FIND_FILE( RISCV_XPACK_GCC_COMPILER_EXT "riscv64-unknown-elf-gcc.exe" PATHS ENV INCLUDE)
 FIND_FILE( RISCV_XPACK_GCC_COMPILER "riscv64-unknown-elf-gcc" PATHS ENV INCLUDE)
 
-# Look for RISC32-V github GCC
+# Look for RISC64-V Glibc github GCC
+# https://github.com/riscv/riscv-gnu-toolchain
+#FIND_FILE( RISCV_XPACK_GCC_COMPILER_EXT "riscv64-unknown-linux-gnu-gcc.exe" PATHS ENV INCLUDE)
+#FIND_FILE( RISCV_XPACK_GCC_COMPILER "riscv64-unknown-linux-gnu-gcc" PATHS ENV INCLUDE)
+
+# Look for RISC32-V Newlib github GCC
 # https://github.com/riscv/riscv-gnu-toolchain
 FIND_FILE( RISCV_XPACK_GCC_COMPILER_EXT "riscv32-unknown-elf-gcc.exe" PATHS ENV INCLUDE)
 FIND_FILE( RISCV_XPACK_GCC_COMPILER "riscv32-unknown-elf-gcc" PATHS ENV INCLUDE)
@@ -65,6 +70,7 @@ set(CMAKE_AR ${CROSS_COMPILE}ar)
 set(CMAKE_ASM_COMPILER ${CROSS_COMPILE}gcc)
 set(CMAKE_C_COMPILER ${CROSS_COMPILE}gcc)
 set(CMAKE_CXX_COMPILER ${CROSS_COMPILE}g++)
+set(CMAKE_CXX_STANDARD 11)
 
 # We must set the OBJCOPY setting into cache so that it's available to the
 # whole project. Otherwise, this does not get set into the CACHE and therefore
