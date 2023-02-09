@@ -7,9 +7,15 @@ project(AzadiSDK C)
 set(TARGET test)
 
 set(TESTNAME gpio_test CACHE STRING "Enter name of a test.")
+option(USE_TFLM "compile with tflm library" ON)
+
+if(USE_TFLM)
+        add_subdirectory("${CMAKE_SOURCE_DIR}/external/tflm")
+        list(APPEND OPTIONAL_LIBS tflm)
+endif()
 
 add_subdirectory(src)
-add_subdirectory("${CMAKE_SOURCE_DIR}/external/tflm")
+
 add_executable( ${TARGET}.elf softwares/${TESTNAME}/${TESTNAME}.c)
 target_sources( ${TARGET}.elf PUBLIC "${CMAKE_SOURCE_DIR}/azadi/start.S"
 									"${CMAKE_SOURCE_DIR}/azadi/trap.c"
@@ -18,7 +24,7 @@ SET(LINKER_SCRIPT "${CMAKE_SOURCE_DIR}/azadi/link.ld")
 
 set_target_properties( ${TARGET}.elf PROPERTIES LINK_DEPENDS "${LINKER_SCRIPT}" )
 
-target_link_libraries( ${TARGET}.elf PUBLIC src tflm )
+target_link_libraries( ${TARGET}.elf PUBLIC src ${OPTIONAL_LIBS} )
 target_include_directories( ${TARGET}.elf PUBLIC "${PROJECT_BINARY_DIR}" )
 
 
