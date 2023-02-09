@@ -46,11 +46,11 @@
 #define SPI3_START 0x40003300 /* Serial Peripheral Interface 3 */
 
 /*!Universal Synchronous Receiver Transmitter Interface Offsets */
-#define UART0_START 0x40002000 /*! UART 0 */
-#define UART_OFFSET 0x100
-#define MAX_UART_COUNT 3
-#define UART1_START 0x40002200
-#define UART2_START 0x40002300
+#define UART0_BASE_ADDRESS 0x40002000 /*! UART 0 */
+#define UART1_BASE_ADDRESS 0x40002100
+#define UART2_BASE_ADDRESS 0x40002200
+#define UART3_BASE_ADDRESS 0x40002300
+#define MAX_UART_COUNT 4
 
 #define PINMUX_CONFIGURE_REG 0x40310
 

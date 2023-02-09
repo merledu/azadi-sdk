@@ -1,45 +1,41 @@
-/**
-@file uart.c
-@brief Contains the driver routines for UART interface.
-@detail The UART driver has software functions to configure, transmit
-and receive over UART interface.
-*/
-
 #include "uart.h"
 
-#include <math.h>
 #include <stdint.h>
 
-#include "timer.h"
+#include "platform.h"
 #include "utils.h"
 
 void uart_init(unsigned int baud_rate, unsigned int clock_frequency) {
   // computing formula : baud_rate = clock_frequency/baud_rate
   uint32_t clock_per_bit = (clock_frequency / baud_rate) + 1;
-  mem_write32(UART_BASE_ADDRESS, UART_CNTRL_REGISTER_OFFSET, clock_per_bit);
+  mem_write32(UART0_BASE_ADDRESS, UART_CNTRL_REG_OFFSET, clock_per_bit);
 }
 
 void uart_send_char(char val) {
   // transmitting character
-  mem_write32(UART_BASE_ADDRESS, UART_WDATA_REGISTER_OFFSET, val);
-  mem_write32(UART_BASE_ADDRESS, UART_TX_ENABLE_REGISTER_OFFSET, 1);
+  mem_write32(UART0_BASE_ADDRESS, UART_WDATA_REG_OFFSET, val);
+  mem_write32(UART0_BASE_ADDRESS, UART_TX_ENABLE_REG_OFFSET, 1);
 }
 
-void uart_send_str(char* str) {
-  // transmitting string
+void uart_send(char* str) {
+  mem_write32(UART0_BASE_ADDRESS, UART_TX_FIFO_EN_REG_OFFSET, 1);
+  mem_write32(UART0_BASE_ADDRESS, UART_TX_ENABLE_REG_OFFSET, 1);
+
   while (*str != '\0') {
-    uart_send_char(*str++);
-    delay(500);
+    mem_write32(UART0_BASE_ADDRESS, UART_WDATA_REG_OFFSET, *str++);
   }
 }
 
-int uart_polled_data() {
-  // polling uart
-  mem_write32(UART_BASE_ADDRESS, UART_RX_ENABLE_REGISTER_OFFSET, 1);
-  uint32_t rcv_status =
-      mem_read32(UART_BASE_ADDRESS, UART_RX_STATUS_REGISTER_OFFSET);
-  while (rcv_status != 1) {
-    return mem_read32(UART_BASE_ADDRESS, UART_RDATA_REGISTER_OFFSET);
+int uart_recv() {
+  uint32_t rcv_status = 0;
+
+  mem_write32(UART0_BASE_ADDRESS, UART_RX_ENABLE_REG_OFFSET, 1);
+
+  // polling uart status register
+  while (rcv_status == 1) {
+    rcv_status = mem_read32(UART0_BASE_ADDRESS, UART_RX_STATUS_REG_OFFSET);
   }
-  mem_write32(UART_BASE_ADDRESS, UART_RX_SC_REGISTER_OFFSET, 0);
+  // read character when status == 1 and clear status
+  mem_read32(UART0_BASE_ADDRESS, UART_RDATA_REG_OFFSET);
+  mem_write32(UART0_BASE_ADDRESS, UART_RX_SC_REG_OFFSET, 0);
 }
