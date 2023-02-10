@@ -5,25 +5,20 @@
 #include "platform.h"
 #include "utils.h"
 
-void uart_init(unsigned int baud_rate, unsigned int clock_frequency) {
+void uart_init(unsigned int baud_rate) {
   // computing formula : baud_rate = clock_frequency/baud_rate
+  const uint32_t clock_frequency = 25000000;
   uint32_t clock_per_bit = (clock_frequency / baud_rate) + 1;
   mem_write32(UART0_BASE_ADDRESS, UART_CNTRL_REG_OFFSET, clock_per_bit);
 }
 
-void uart_send_char(char val) {
-  // transmitting character
-  mem_write32(UART0_BASE_ADDRESS, UART_WDATA_REG_OFFSET, val);
-  mem_write32(UART0_BASE_ADDRESS, UART_TX_ENABLE_REG_OFFSET, 1);
-}
-
 void uart_send(char* str) {
-  mem_write32(UART0_BASE_ADDRESS, UART_TX_FIFO_EN_REG_OFFSET, 1);
-  mem_write32(UART0_BASE_ADDRESS, UART_TX_ENABLE_REG_OFFSET, 1);
-
   while (*str != '\0') {
     mem_write32(UART0_BASE_ADDRESS, UART_WDATA_REG_OFFSET, *str++);
   }
+
+  mem_write32(UART0_BASE_ADDRESS, UART_TX_FIFO_EN_REG_OFFSET, 1);
+  mem_write32(UART0_BASE_ADDRESS, UART_TX_ENABLE_REG_OFFSET, 1);
 }
 
 int uart_recv() {

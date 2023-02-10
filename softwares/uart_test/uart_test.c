@@ -7,7 +7,8 @@ int main() {
   // uart_init(9600, 16000000);
   // Uart_Send_Str(str);
 
-  uart_init(9600, 16000000);
-  uart_send("waleed");
+  char str[6] = "waleed";
+  uart_init(9600);
+  uart_send(str);
   return 0;
 }
