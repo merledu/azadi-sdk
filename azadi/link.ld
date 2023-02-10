@@ -12,27 +12,12 @@ ENTRY(_start)
 SECTIONS
 {
 PROVIDE( __stack_top = ORIGIN(DCCM) + LENGTH(DCCM));
-.init :
-{
-  KEEP (*(SORT_NONE(.init)))
-}>ICCM
-.text :
- {
-     _stext = .;
-     *(.text) 
-     _etext = .;
- }>ICCM
+.init : { KEEP (*(SORT_NONE(.init))) }>ICCM
+.text : { *(.text) }>ICCM
 .data :
- {
-    _sdata = .;
-   __global_pointer$ = _sdata + 0x000;
-    *(.data)
-    _edata = .;
- }>DCCM
-.bss :
- {
-    _sbss = .;
-    *(.bss)
-    _ebss = .;
- }>DCCM
+{
+  __global_pointer$ = . + 0x000;
+  *(.data)
+}>DCCM
+.bss : { *(.bss) }>DCCM
 }
