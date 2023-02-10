@@ -8,6 +8,6 @@
 #define UART_TX_FIFO_EN_REG_OFFSET 0x1c
 #define UART_TX_FIFO_SIZE 128  // bytes
 
-void uart_init(unsigned int baud_rate, unsigned int clock_frequency);
+void uart_init(unsigned int baud_rate);
 void uart_send(char* str);
 int uart_recv();
