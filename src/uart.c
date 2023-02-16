@@ -32,6 +32,6 @@ uint8_t uart_recv_byte_polled(uart_t* uart) {
     rcv_status = mem_read32(uart->base_address, UART_RX_STATUS_REG_OFFSET);
   }
   // read character when status == 1 and clear status
-  mem_read32(uart->base_address, UART_RDATA_REG_OFFSET);
   mem_write32(uart->base_address, UART_RX_SC_REG_OFFSET, 0);
+  return mem_read32(uart->base_address, UART_RDATA_REG_OFFSET);
 }
