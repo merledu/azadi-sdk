@@ -12,6 +12,9 @@ _start:
     .option pop
     la sp, __stack_top
     add s0, sp, zero
+    la a0, __libc_fini_array
+	call atexit
+	call __libc_init_array
     jal zero, main
     nop
     .cfi_endproc
