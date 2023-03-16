@@ -16,10 +16,10 @@ endif()
 
 add_subdirectory(src)
 
-add_executable( ${TARGET}.elf softwares/${TESTNAME}/${TESTNAME}.c)
-target_sources( ${TARGET}.elf PUBLIC "${CMAKE_SOURCE_DIR}/azadi/start.S"
-									"${CMAKE_SOURCE_DIR}/azadi/trap.c"
-									"${CMAKE_SOURCE_DIR}/azadi/trap_entry.S" )
+add_executable( ${TARGET}.elf "")
+file(GLOB_RECURSE TEST_SRC "${CMAKE_SOURCE_DIR}/softwares/${TESTNAME}/*.c" "${CMAKE_SOURCE_DIR}/softwares/${TESTNAME}/*.cc" "${CMAKE_SOURCE_DIR}/softwares/${TESTNAME}/*.h")
+target_sources( ${TARGET}.elf PUBLIC "${CMAKE_SOURCE_DIR}/azadi/start.S" "${CMAKE_SOURCE_DIR}/azadi/trap.c"
+									"${CMAKE_SOURCE_DIR}/azadi/trap_entry.S" ${TEST_SRC})
 SET(LINKER_SCRIPT "${CMAKE_SOURCE_DIR}/azadi/link.ld")
 
 set_target_properties( ${TARGET}.elf PROPERTIES LINK_DEPENDS "${LINKER_SCRIPT}" )

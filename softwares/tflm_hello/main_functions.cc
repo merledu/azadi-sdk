@@ -15,12 +15,9 @@ limitations under the License.
 
 #include "main_functions.h"
 
-#include "constants.h"
 #include "hello_world_model_data.h"
-#include "output_handler.h"
-#include "tensorflow/lite/micro/all_ops_resolver.h"
+#include "tensorflow/lite/micro/micro_mutable_op_resolver.h"
 #include "tensorflow/lite/micro/micro_interpreter.h"
-#include "tensorflow/lite/micro/micro_log.h"
 #include "tensorflow/lite/micro/system_setup.h"
 #include "tensorflow/lite/schema/schema_generated.h"
 
@@ -44,10 +41,6 @@ void setup() {
   // copying or parsing, it's a very lightweight operation.
   model = tflite::GetModel(g_hello_world_model_data);
   if (model->version() != TFLITE_SCHEMA_VERSION) {
-    MicroPrintf(
-        "Model provided is schema version %d not equal "
-        "to supported version %d.",
-        model->version(), TFLITE_SCHEMA_VERSION);
     return;
   }
 
@@ -63,7 +56,6 @@ void setup() {
   // Allocate memory from the tensor_arena for the model's tensors.
   TfLiteStatus allocate_status = interpreter->AllocateTensors();
   if (allocate_status != kTfLiteOk) {
-    MicroPrintf("AllocateTensors() failed");
     return;
   }
 
@@ -85,10 +77,10 @@ float run_inference(float x) {
 
   // Run inference, and report any error
   TfLiteStatus invoke_status = interpreter->Invoke();
-  if (invoke_status != kTfLiteOk) {
-    MicroPrintf("Invoke failed on x: %f\n", static_cast<double>(x));
-    return;
-  }
+//  if (invoke_status != kTfLiteOk) {
+//   MicroPrintf("Invoke failed on x: %f\n", static_cast<double>(x));
+//    return;
+//  }
 
   // Obtain the quantized output from model's output tensor
   int8_t y_quantized = output->data.int8[0];
