@@ -11,7 +11,7 @@ target_include_directories( tflm
 
 target_compile_definitions( tflm
     PUBLIC
-    COMPILE_DEFINITIONS TF_LITE_STATIC_MEMORY
+    COMPILE_DEFINITIONS TF_LITE_MCU_DEBUG_LOG
     # COMPILE_DEFINITIONS LINUX
     COMPILE_DEFINITIONS TF_LITE_USE_CTIME
     COMPILE_DEFINITIONS TF_LITE_USE_GLOBAL_CMATH_FUNCTIONS
@@ -19,16 +19,14 @@ target_compile_definitions( tflm
     COMPILE_DEFINITIONS TF_LITE_USE_GLOBAL_MAX
 )
 
-set_target_properties( tflm
-    PROPERTIES
-    COMPILE_FLAGS -fno-rtti
-    COMPILE_FLAGS -fno-exceptions
-    COMPILE_FLAGS -fno-threadsafe-statics
-    # COMPILE_FLAGS -nostdlib
-    COMPILE_FLAGS -fno-unwind-tables
-    COMPILE_FLAGS -ffunction-sections
-    COMPILE_FLAGS -fdata-sections
-    COMPILE_FLAGS -fmessage-length=0
+target_compile_options( tflm
+    PUBLIC -funsigned-char
+    PUBLIC -fno-delete-null-pointer-checks
+    PUBLIC -fomit-frame-pointer
+    #PUBLIC -fpermissive
+    PUBLIC -fno-builtin-printf
+    PUBLIC -nostdlib
+    PUBLIC -fno-use-cxa-atexit
 )
 
 file(GLOB_RECURSE SRC ${CMAKE_CURRENT_LIST_DIR}/*.c ${CMAKE_CURRENT_LIST_DIR}/*.cpp ${CMAKE_CURRENT_LIST_DIR}/*.cc ${CMAKE_CURRENT_LIST_DIR}/*.cxx ${CMAKE_CURRENT_LIST_DIR}/*.h ${CMAKE_CURRENT_LIST_DIR}/*.hpp)
