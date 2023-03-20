@@ -23,5 +23,17 @@ int main(int argc, char* argv[]) {
   
   // a value between 0 and 20 (inference per cycle)
   y = run_inference(1.2423);
+
+  // asm (
+  //   "fadd f31, f31, (%[y])\n"
+  //   :
+  //   : [y] "r" (y)
+  // );
+  
+  if(y > 0.8 && y < 1.0){
+    asm (
+      "addi x31, x0, 1\n"
+    );
+  }
   
 }
