@@ -24,11 +24,11 @@ SET(LINKER_SCRIPT "${CMAKE_SOURCE_DIR}/azadi/link.ld")
 
 set_target_properties( ${TARGET}.elf PROPERTIES LINK_DEPENDS "${LINKER_SCRIPT}" )
 
-target_link_libraries( ${TARGET}.elf PUBLIC src ${OPTIONAL_LIBS} )
+target_link_libraries( ${TARGET}.elf PUBLIC src c_nano ${OPTIONAL_LIBS} gcc m c_nano )
 target_include_directories( ${TARGET}.elf PUBLIC "${PROJECT_BINARY_DIR}" )
 
 
-SET(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -static -T ${LINKER_SCRIPT}")
+SET(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} --specs=nano.specs -T ${LINKER_SCRIPT}")
 
 # Post processing command to create a disassembly file 
 add_custom_command(TARGET ${TARGET}.elf POST_BUILD

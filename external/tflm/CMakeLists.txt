@@ -23,10 +23,14 @@ target_compile_options( tflm
     PUBLIC -funsigned-char
     PUBLIC -fno-delete-null-pointer-checks
     PUBLIC -fomit-frame-pointer
-    #PUBLIC -fpermissive
+    PUBLIC -fpermissive
     PUBLIC -fno-builtin-printf
     PUBLIC -nostdlib
     PUBLIC -fno-use-cxa-atexit
+	PUBLIC -fno-exceptions
+	PUBLIC -mexplicit-relocs
+	PUBLIC -fno-rtti
+	PUBLIC -fno-threadsafe-statics
 )
 
 file(GLOB_RECURSE SRC ${CMAKE_CURRENT_LIST_DIR}/*.c ${CMAKE_CURRENT_LIST_DIR}/*.cpp ${CMAKE_CURRENT_LIST_DIR}/*.cc ${CMAKE_CURRENT_LIST_DIR}/*.cxx ${CMAKE_CURRENT_LIST_DIR}/*.h ${CMAKE_CURRENT_LIST_DIR}/*.hpp)
